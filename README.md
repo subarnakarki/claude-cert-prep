@@ -2,7 +2,7 @@
 
 A study app for the **Claude Certified Architect – Foundations** (CCAR-F) exam. It covers all five exam domains with notes, decision rules, the six exam scenarios, flashcards and 63 practice questions. It tracks how ready you are per domain, and it always suggests practising the domain you're weakest in.
 
-It's a server-rendered Django app with no build step. The only JavaScript is about 80 lines for the flashcards. It works well on a phone.
+It's a server-rendered Django app with no build step. It also exports a **static build for GitHub Pages** that you can install on your phone's home screen and use offline.
 
 > **About the questions:** every practice question in this repo is original, written to exercise the skills in the public exam guide. None of them are real exam items, and none come from the exam.
 
@@ -38,6 +38,32 @@ Screenshots of every page at 1400px and 390px are in [`docs/`](docs/). The appro
   - A ●●◉○○ progress line, results by domain, and a "retry missed" button.
 - **Study plan:** a 10-day plan plus the four hands-on exercises from the exam guide.
 - **Reset:** a confirm page, then a POST that clears this browser's progress.
+
+## Use it on your phone (GitHub Pages)
+
+`manage.py build_site` renders every page with the same templates into plain HTML. In that build, a small `app.js` runs the practice flow in the browser and keeps progress in the phone's local storage. A service worker caches the whole site, so it also works offline.
+
+**One-time setup:**
+1. Push to GitHub.
+2. Open the repository's **Settings → Pages** and set **Source: GitHub Actions**.
+3. The `Deploy to GitHub Pages` workflow (`.github/workflows/pages.yml`) runs the tests, builds the site and publishes it on every push to `main`. Your site is at `https://<user>.github.io/<repo>/`.
+
+**Install on your phone:**
+- **iPhone (Safari):** tap Share, then **Add to Home Screen**.
+- **Android (Chrome):** tap the ⋮ menu, then **Install app** (or **Add to Home screen**).
+
+It opens full-screen like an app.
+
+Some things to know:
+- **Progress is per device.** Your phone and laptop each keep their own, just as the server version keeps it per browser.
+- **Clearing site data for the page erases your progress.** The app asks the browser to keep its storage persistent. An installed home-screen app on iOS keeps its own storage, separate from Safari.
+
+To preview the static build locally:
+
+```sh
+uv run python manage.py build_site --out _site
+uv run python -m http.server 8001 -d _site   # http://127.0.0.1:8001
+```
 
 ## Quick start
 
@@ -108,7 +134,10 @@ What the suites cover:
   - The latest attempt decides mastery.
   - Status thresholds, the weighted projection, weakest-domain choice with its tie-break, and the 85% `end_turn` switch.
 - **`codeify` filter** (`test_codeify.py`): wraps identifiers and escapes HTML before wrapping.
-- **e2e** (`tests/e2e/`): start a run → answer → see feedback → reach results, plus the flashcard flip.
+- **Static build** (`test_static_site.py`): every page is written, every link respects the base path, no POST forms remain, `content.json` is complete and codeified, and the service worker only precaches files that exist.
+- **e2e** (`tests/e2e/`)
+  - The server app: start a run, answer, see feedback, reach results; plus the flashcard flip.
+  - The static build, served from a sub-path like GitHub Pages: a full practice run that updates the overview's readiness, reset, and offline loading through the service worker.
 
 CI (`.github/workflows/ci.yml`) has three jobs:
 
@@ -131,7 +160,9 @@ study/
   views.py           thin views over the two modules above
   templatetags/      codeify, bar
   content/ccarf.json all study content
-  static/study/      trace.css, self-hosted woff2 fonts, flashcards.js
+  static_site.py     the GitHub Pages export (build_site command)
+  static/study/      trace.css, woff2 fonts, flashcards.js, app.js (static build),
+                     manifest + icons
 tests/               pytest-django suites, plus e2e/ for Playwright
 ```
 
@@ -155,6 +186,13 @@ tests/               pytest-django suites, plus e2e/ for Playwright
 - The browser only ever sends choice ids. The server checks they belong to the current question, then grades by exact set match: every correct choice and nothing else.
 - The shuffled question order and per-question choice order are stored in the session when the run starts. Reloads and back-button use never reshuffle, and the `[a]`/`[b]` letters in the feedback always match what you saw.
 - Answers are POST → redirect → GET, so refreshing never grades twice.
+
+**One codebase, two deployments.**
+- The Django app is the reference implementation.
+- The GitHub Pages build reuses its templates through the test client with `STATIC_SITE=True`. Templates then swap their few POST forms for buttons, and `app.js` (about 400 lines) mirrors `progress.py` and `practice.py` in the browser.
+- Prompt, choice and explanation HTML is codeified at build time, so the browser never has to escape anything.
+- The trade-off: in the static build, grading happens in the browser and the answers ship in `content.json`. That's fine for self-study, and it's why the server version keeps grading on the server.
+- The e2e suite runs the same practice flow against both versions.
 
 **Templates first, minimal JavaScript.**
 - Every page works without JS. Flashcards enhance a plain list into a single flip card.
