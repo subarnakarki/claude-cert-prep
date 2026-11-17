@@ -30,6 +30,8 @@ body {
   font-family: var(--sans);
   font-size: 17px;
   line-height: 1.6;
+  /* Keep content clear of notches and the home indicator when installed full-screen. */
+  padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 code, .m { font-family: var(--mono); }
 code { color: var(--blue); font-size: .92em; overflow-wrap: anywhere; }

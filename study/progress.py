@@ -45,7 +45,8 @@ def status_for(ratio: float) -> str:
 
 
 def text_bar(ratio: float, width: int = BAR_WIDTH) -> str:
-    filled = min(width, max(0, round(ratio * width)))
+    # Round half up (not Python's banker's rounding) so app.js draws identical bars.
+    filled = min(width, max(0, math.floor(ratio * width + 0.5)))
     return "█" * filled + "░" * (width - filled)
 
 

@@ -2,10 +2,17 @@
 {% block title %}Reset progress · {% endblock %}
 {% block content %}
 <h1>Reset your progress?</h1>
-<p class="lede">This deletes {{ attempts }} answer{{ attempts|pluralize }} recorded in this browser and ends any run in progress. Every domain goes back to zero. It can't be undone.</p>
+<p class="lede">This deletes <span data-attempts>{{ attempts }} answer{{ attempts|pluralize }}</span> recorded in this browser and ends any run in progress. Every domain goes back to zero. It can't be undone.</p>
+{% if static_site %}
+<div class="cta">
+  <button class="btn danger" type="button" data-reset>Yes, reset progress</button>
+  <a class="btn" href="{% url 'study:overview' %}">Keep my progress</a>
+</div>
+{% else %}
 <form method="post" action="{% url 'study:practice_reset' %}" class="cta">
   {% csrf_token %}
   <button class="btn danger" type="submit">Yes, reset progress</button>
   <a class="btn" href="{% url 'study:overview' %}">Keep my progress</a>
 </form>
+{% endif %}
 {% endblock %}

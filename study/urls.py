@@ -16,6 +16,7 @@ urlpatterns = [
     path("practice/start/", views.practice_start, name="practice_start"),
     path("practice/start/<slug:slug>/", views.practice_quick_start, name="practice_quick_start"),
     path("practice/question/", views.practice_question, name="practice_question"),
+    path("practice/run/", views.practice_run, name="practice_run"),
     path("practice/next/", views.practice_next, name="practice_next"),
     path("practice/results/", views.practice_results, name="practice_results"),
     path("practice/retry/", views.practice_retry, name="practice_retry"),

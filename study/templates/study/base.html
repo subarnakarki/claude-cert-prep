@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#1C1E22">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="CCAR-F">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="description" content="Practice for the Claude Certified Architect – Foundations exam.">
   <title>{% block title %}{% endblock %}CCAR-F Prep</title>
   <link rel="preload" href="{% static 'study/fonts/AtkinsonNext.woff2' %}" as="font" type="font/woff2" crossorigin>
@@ -11,8 +15,10 @@
   <link rel="stylesheet" href="{% static 'study/css/fonts.css' %}">
   <link rel="stylesheet" href="{% static 'study/css/trace.css' %}">
   <link rel="icon" href="{% static 'study/favicon.svg' %}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{% static 'study/icons/apple-touch-icon.png' %}">
+  <link rel="manifest" href="{% static 'study/manifest.webmanifest' %}">
 </head>
-<body>
+<body{% if static_site %} data-static="1" data-base="{% url 'study:overview' %}" data-page="{{ request.resolver_match.url_name }}"{% endif %}>
   <a class="skip" href="#content">Skip to content</a>
   <header>
     <div class="hi">
@@ -31,6 +37,7 @@
     <section>{% block content %}{% endblock %}</section>
     <aside>{% block aside %}{% endblock %}</aside>
   </main>
+  {% if static_site %}<script src="{% static 'study/js/app.js' %}" defer></script>{% endif %}
   {% block scripts %}{% endblock %}
 </body>
 </html>

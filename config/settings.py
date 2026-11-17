@@ -107,6 +107,10 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# True only while `manage.py build_site` renders the static (GitHub Pages) build, where
+# app.js replaces the server-side practice flow and progress lives in localStorage.
+STATIC_SITE = False
+
 # Progress is tied to the browser session, so keep it around for a study period.
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 365
 SESSION_SAVE_EVERY_REQUEST = False

@@ -10,3 +10,4 @@ staticfiles/
 test-results/
 .coverage
 htmlcov/
+_site/

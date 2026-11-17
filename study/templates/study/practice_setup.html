@@ -6,8 +6,13 @@
   <p class="lede">Questions and answer choices are shuffled every run. Each answer counts toward your readiness.</p>
 </div>
 
+{% if static_site %}
+<noscript><p class="form-error">Practice runs in your browser here, so it needs JavaScript.</p></noscript>
+<form data-setup novalidate>
+{% else %}
 <form method="post" action="{% url 'study:practice_start' %}" novalidate>
   {% csrf_token %}
+{% endif %}
   <div class="field">
     <label for="{{ form.domain.id_for_label }}">{{ form.domain.label }}</label>
     {{ form.domain }}
@@ -24,16 +29,21 @@
   </fieldset>
   {% if form.non_field_errors %}{% for e in form.non_field_errors %}<p class="form-error" role="alert">{{ e }}</p>{% endfor %}{% endif %}
   {% for field in form %}{% for e in field.errors %}<p class="form-error" role="alert">{{ field.label }}: {{ e }}</p>{% endfor %}{% endfor %}
+  {% if static_site %}<p class="form-error" role="alert" data-setup-error hidden></p>{% endif %}
   <div class="cta">
     <button class="btn pr" type="submit">ccarf practice</button>
-    {% if run %}<a class="btn" href="{% url 'study:practice_question' %}">Resume run · {{ run.answered_count }}/{{ run.total }}</a>{% endif %}
+    {% if static_site %}
+    <a class="btn" href="{% url 'study:practice_run' %}" data-resume hidden>Resume run</a>
+    {% elif run %}
+    <a class="btn" href="{% url 'study:practice_question' %}">Resume run · {{ run.answered_count }}/{{ run.total }}</a>
+    {% endif %}
   </div>
 </form>
 {% endblock %}
 {% block aside %}
 <h2>Your progress</h2>
 <dl>
-  {% for r in rows %}<dt class="m">{{ r.domain.slug }}</dt><dd><span class="{% if r.status == 'ok' %}ok{% elif r.status == 'warn' %}wa{% else %}er{% endif %}">{{ r.mastered }}/{{ r.total }}</span> mastered</dd>{% endfor %}
+  {% for r in rows %}<dt class="m">{{ r.domain.slug }}</dt><dd><span class="{% if r.status == 'ok' %}ok{% elif r.status == 'warn' %}wa{% else %}er{% endif %}" data-ready="{{ r.domain.slug }}" data-fmt="count" data-color>{{ r.mastered }}/{{ r.total }}</span> mastered</dd>{% endfor %}
 </dl>
 <p><a href="{% url 'study:practice_reset' %}">Reset progress</a></p>
 {% endblock %}

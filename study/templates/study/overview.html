@@ -5,8 +5,8 @@
 <p class="lede">Practice for the Claude Certified Architect exam across all five domains. Each run updates your readiness, and the next suggested session targets the domain you're weakest in.</p>
 
 <div class="term" role="region" aria-label="Readiness">
-  <div class="bar"><span>readiness</span><span>session {{ runs_started }}</span></div>
-<pre><span class="d">$</span> ccarf status
+  <div class="bar"><span>readiness</span><span>session <span data-runs>{{ runs_started }}</span></span></div>
+<pre id="status"><span class="d">$</span> ccarf status
 
 {% for r in rows %}  <a href="{{ r.domain.get_absolute_url }}" class="p">{{ r.domain.slug|ljust:"12" }}</a>  {{ r.domain.weight|stringformat:"3d" }}%  <span class="{% if r.status == 'ok' %}ok{% elif r.status == 'warn' %}wa{% else %}er{% endif %}" aria-hidden="true"><span class="lg">{{ r.bar }}</span><span class="sm">{{ r.ratio|bar:10 }}</span></span><span class="sr-only">{{ r.percent }}% ready</span>  {{ r.mastered|stringformat:"2d" }}/{{ r.total }}
 {% endfor %}
@@ -16,11 +16,15 @@
 
 <div class="cta">
   {% if weakest %}
+  {% if static_site %}
+  <button class="btn pr" type="button" data-start="{{ weakest.domain.slug }}">ccarf practice --domain {{ weakest.domain.slug }}</button>
+  {% else %}
   <form method="post" action="{% url 'study:practice_quick_start' weakest.domain.slug %}">
     {% csrf_token %}
     <button class="btn pr" type="submit">ccarf practice --domain {{ weakest.domain.slug }}</button>
   </form>
-  <a class="btn" href="{{ weakest.domain.get_absolute_url }}">Read the notes</a>
+  {% endif %}
+  <a class="btn" href="{{ weakest.domain.get_absolute_url }}" data-notes>Read the notes</a>
   {% endif %}
 </div>
 {% endblock %}

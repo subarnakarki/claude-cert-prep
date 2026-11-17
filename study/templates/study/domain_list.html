@@ -13,7 +13,7 @@
     <div class="meta">
       <span>{{ d.slug }}</span>
       <span>{{ d.weight }}% · ≈{{ d.exam_items }} questions</span>
-      <span><span class="rbar {% if row.status == 'ok' %}ok{% elif row.status == 'warn' %}wa{% else %}er{% endif %}" aria-hidden="true">{{ row.bar }}</span> {{ row.mastered }}/{{ row.total }} mastered</span>
+      <span><span class="rbar {% if row.status == 'ok' %}ok{% elif row.status == 'warn' %}wa{% else %}er{% endif %}" aria-hidden="true" data-ready="{{ d.slug }}" data-fmt="bar">{{ row.bar }}</span> <span data-ready="{{ d.slug }}" data-fmt="count">{{ row.mastered }}/{{ row.total }}</span> mastered</span>
       <span>{{ d.n_tasks }} task statements · <a href="{% url 'study:flashcards' %}?domain={{ d.slug }}">{{ d.n_cards }} cards</a></span>
     </div>
   </li>

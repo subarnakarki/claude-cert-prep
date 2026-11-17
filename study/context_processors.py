@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.urls import reverse
 
 # (label, url name, url-name prefix that marks the section as current)
@@ -19,4 +20,4 @@ def nav(request):
         {"label": label, "url": reverse(name), "current": current.startswith(prefix)}
         for label, name, prefix in NAV
     ]
-    return {"nav_items": items}
+    return {"nav_items": items, "static_site": settings.STATIC_SITE}

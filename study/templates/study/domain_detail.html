@@ -19,14 +19,18 @@
 {% block aside %}
 <h2>Your readiness</h2>
 <dl>
-  <dt>Mastered</dt><dd>{{ row.mastered }} of {{ row.total }}</dd>
-  <dt>Status</dt><dd><span class="rbar {% if row.status == 'ok' %}ok{% elif row.status == 'warn' %}wa{% else %}er{% endif %}" aria-hidden="true">{{ row.bar }}</span><span class="sr-only">{{ row.percent }}%</span></dd>
+  <dt>Mastered</dt><dd data-ready="{{ domain.slug }}" data-fmt="of">{{ row.mastered }} of {{ row.total }}</dd>
+  <dt>Status</dt><dd><span class="rbar {% if row.status == 'ok' %}ok{% elif row.status == 'warn' %}wa{% else %}er{% endif %}" aria-hidden="true" data-ready="{{ domain.slug }}" data-fmt="bar">{{ row.bar }}</span></dd>
 </dl>
 <div class="cta">
+  {% if static_site %}
+  <button class="btn pr" type="button" data-start="{{ domain.slug }}">practice {{ domain.slug }}</button>
+  {% else %}
   <form method="post" action="{% url 'study:practice_quick_start' domain.slug %}">
     {% csrf_token %}
     <button class="btn pr" type="submit">practice {{ domain.slug }}</button>
   </form>
+  {% endif %}
   <a class="btn" href="{% url 'study:flashcards' %}?domain={{ domain.slug }}">Flashcards</a>
 </div>
 {% with scenarios=domain.scenarios.all %}{% if scenarios %}

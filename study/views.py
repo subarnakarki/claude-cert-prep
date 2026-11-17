@@ -1,6 +1,7 @@
 import math
 from collections import defaultdict
 
+from django.conf import settings
 from django.contrib import messages
 from django.db.models import Count, Prefetch
 from django.http import HttpResponseBadRequest
@@ -205,6 +206,14 @@ def _question_context(run, question, error):
         "is_last": run.pos == run.total - 1,
         "domain": Domain.objects.filter(slug=run.domain).first() if run.domain else None,
     }
+
+
+@require_GET
+def practice_run(request):
+    """The static build's practice page: app.js runs the whole session in the browser."""
+    if not settings.STATIC_SITE:
+        return redirect("study:practice_question")
+    return render(request, "study/practice_run.html")
 
 
 @require_POST

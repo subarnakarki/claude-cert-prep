@@ -66,7 +66,7 @@ def test_quick_start_from_overview(client):
 def test_runs_started_counter_shows_on_overview(client):
     start_practice(client)
     start_practice(client)
-    assert "session 2" in client.get("/").content.decode()
+    assert "session <span data-runs>2</span>" in client.get("/").content.decode()
 
 
 def test_questions_and_choices_are_shuffled_and_persisted():
@@ -325,7 +325,7 @@ def test_reset_get_confirms_without_deleting(client):
     response = client.get("/practice/reset/")
     assert response.status_code == 200
     assert "Yes, reset progress" in response.content.decode()
-    assert "deletes 1 answer" in response.content.decode()
+    assert "deletes <span data-attempts>1 answer</span>" in response.content.decode()
     assert Attempt.objects.count() == 1
 
 
@@ -339,4 +339,4 @@ def test_reset_post_deletes_only_this_session(client, make_attempt):
     assert "Progress reset." in response.content.decode()
     assert list(Attempt.objects.values_list("session_key", flat=True)) == ["someone-else"]
     assert "practice" not in client.session
-    assert "session 0" in client.get("/").content.decode()
+    assert "session <span data-runs>0</span>" in client.get("/").content.decode()

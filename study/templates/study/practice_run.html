@@ -1,0 +1,8 @@
+{% extends "study/base.html" %}
+{% comment %}Static build only: app.js renders questions, feedback and results into #run.{% endcomment %}
+{% block title %}Practice · {% endblock %}
+{% block content %}
+<noscript><p class="form-error">Practice runs in your browser here, so it needs JavaScript.</p></noscript>
+<div id="run"><p class="eyebrow">Loading questions…</p></div>
+{% endblock %}
+{% block aside %}<div id="run-aside"></div>{% endblock %}
