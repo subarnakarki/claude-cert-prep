@@ -1,0 +1,36 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Practice for the Claude Certified Architect – Foundations exam.">
+  <title>{% block title %}{% endblock %}CCAR-F Prep</title>
+  <link rel="preload" href="{% static 'study/fonts/AtkinsonNext.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{% static 'study/fonts/AtkinsonMono.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'study/css/fonts.css' %}">
+  <link rel="stylesheet" href="{% static 'study/css/trace.css' %}">
+  <link rel="icon" href="{% static 'study/favicon.svg' %}" type="image/svg+xml">
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  <header>
+    <div class="hi">
+      <a class="logo" href="{% url 'study:overview' %}">ccarf<span>-prep</span></a>
+      <nav aria-label="Main">
+        <ul>
+          {% for item in nav_items %}
+            <li><a href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main id="content">
+    {% for message in messages %}<p class="flash" role="status">{{ message }}</p>{% endfor %}
+    <section>{% block content %}{% endblock %}</section>
+    <aside>{% block aside %}{% endblock %}</aside>
+  </main>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,35 @@
+{% extends "study/base.html" %}
+{% block title %}Results · {% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Session results</h1>
+  <p class="score">{{ percent }}%<small>{{ run.correct_count }} of {{ run.answered_count }} correct</small></p>
+</div>
+
+{% if domain_rows %}
+<div class="term" role="region" aria-label="Score by domain">
+  <div class="bar"><span>score by domain</span><span>{{ run.answered_count }} answered</span></div>
+<pre><span class="d">$</span> ccarf results
+
+{% for r in domain_rows %}  <span class="p">{{ r.domain.slug|ljust:"12" }}</span>  <span class="{% if r.status == 'ok' %}ok{% elif r.status == 'warn' %}wa{% else %}er{% endif %}" aria-hidden="true">{{ r.bar }}</span>  {{ r.percent|stringformat:"3d" }}%  {{ r.correct|stringformat:"2d" }}/{{ r.answered }}
+{% endfor %}</pre>
+</div>
+{% else %}
+<p class="lede">You ended the session before answering anything.</p>
+{% endif %}
+
+<div class="cta">
+  {% if missed %}
+  <form method="post" action="{% url 'study:practice_retry' %}">
+    {% csrf_token %}
+    <button class="btn pr" type="submit">Retry {{ missed }} missed</button>
+  </form>
+  {% endif %}
+  <a class="btn{% if not missed %} pr{% endif %}" href="{% url 'study:overview' %}">Back to overview</a>
+  <a class="btn" href="{% url 'study:practice_setup' %}">New session</a>
+</div>
+{% endblock %}
+{% block aside %}
+<h2>What next</h2>
+<p>Misses are queued for the "only ones I missed" mode. A question counts as mastered once your latest answer to it is right.</p>
+{% endblock %}

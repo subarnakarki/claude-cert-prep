@@ -1,0 +1,26 @@
+{% extends "study/base.html" %}
+{% load study_tags %}
+{% block title %}Scenarios · {% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Six scenarios</h1>
+  <p class="lede">The exam draws four of these six. Questions are framed inside a scenario, so know what each one tends to test.</p>
+</div>
+<ol class="scen">
+  {% for s in scenarios %}
+  <li id="scenario-{{ s.number }}">
+    <h2><span class="m">{{ s.number }}</span>{{ s.title }}</h2>
+    <p>{{ s.summary|safe }}</p>
+    <p class="look"><b>look for:</b> {{ s.focus|codeify }}</p>
+    <div class="tags" aria-label="Domains">{% for d in s.domains.all %}<a href="{{ d.get_absolute_url }}">{{ d.slug }}</a>{% endfor %}</div>
+  </li>
+  {% endfor %}
+</ol>
+{% endblock %}
+{% block aside %}
+<h2>On the day</h2>
+<dl>
+  <dt>Drawn</dt><dd>4 of the 6 scenarios</dd>
+  <dt>Format</dt><dd>Questions are grouped by scenario</dd>
+</dl>
+{% endblock %}

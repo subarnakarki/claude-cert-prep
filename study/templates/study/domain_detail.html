@@ -1,0 +1,38 @@
+{% extends "study/base.html" %}
+{% block title %}{{ domain.short_name }} · {% endblock %}
+{% block content %}
+<div class="page-head">
+  <p class="eyebrow"><a href="{% url 'study:domain_list' %}">domains</a> / {{ domain.slug }}</p>
+  <h1>{{ domain.name }}</h1>
+  <p class="lede">Domain {{ domain.number }} · {{ domain.weight }}% of the exam, about {{ domain.exam_items }} questions.</p>
+</div>
+{% for task in domain.tasks.all %}
+<article class="task" id="task-{{ task.code }}">
+  <div class="code">{{ task.code }}</div>
+  <div>
+    <h2>{{ task.title }}</h2>
+    {{ task.body_html|safe }}
+  </div>
+</article>
+{% endfor %}
+{% endblock %}
+{% block aside %}
+<h2>Your readiness</h2>
+<dl>
+  <dt>Mastered</dt><dd>{{ row.mastered }} of {{ row.total }}</dd>
+  <dt>Status</dt><dd><span class="rbar {% if row.status == 'ok' %}ok{% elif row.status == 'warn' %}wa{% else %}er{% endif %}" aria-hidden="true">{{ row.bar }}</span><span class="sr-only">{{ row.percent }}%</span></dd>
+</dl>
+<div class="cta">
+  <form method="post" action="{% url 'study:practice_quick_start' domain.slug %}">
+    {% csrf_token %}
+    <button class="btn pr" type="submit">practice {{ domain.slug }}</button>
+  </form>
+  <a class="btn" href="{% url 'study:flashcards' %}?domain={{ domain.slug }}">Flashcards</a>
+</div>
+{% with scenarios=domain.scenarios.all %}{% if scenarios %}
+<h2>Tested in scenarios</h2>
+<ul class="linklist">
+  {% for s in scenarios %}<li><a href="{% url 'study:scenarios' %}#scenario-{{ s.number }}">{{ s.number }}. {{ s.title }}</a></li>{% endfor %}
+</ul>
+{% endif %}{% endwith %}
+{% endblock %}

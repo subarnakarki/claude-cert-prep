@@ -1,0 +1,39 @@
+{% extends "study/base.html" %}
+{% block title %}Practice · {% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Start a practice run</h1>
+  <p class="lede">Questions and answer choices are shuffled every run. Each answer counts toward your readiness.</p>
+</div>
+
+<form method="post" action="{% url 'study:practice_start' %}" novalidate>
+  {% csrf_token %}
+  <div class="field">
+    <label for="{{ form.domain.id_for_label }}">{{ form.domain.label }}</label>
+    {{ form.domain }}
+  </div>
+  <fieldset class="field">
+    <legend>{{ form.mode.label }}</legend>
+    <div class="radios">
+      {% for radio in form.mode %}
+      <label class="opt" for="{{ radio.id_for_label }}">
+        {{ radio.tag }}<span class="k" aria-hidden="true"></span><span>{{ radio.choice_label }}</span>
+      </label>
+      {% endfor %}
+    </div>
+  </fieldset>
+  {% if form.non_field_errors %}{% for e in form.non_field_errors %}<p class="form-error" role="alert">{{ e }}</p>{% endfor %}{% endif %}
+  {% for field in form %}{% for e in field.errors %}<p class="form-error" role="alert">{{ field.label }}: {{ e }}</p>{% endfor %}{% endfor %}
+  <div class="cta">
+    <button class="btn pr" type="submit">ccarf practice</button>
+    {% if run %}<a class="btn" href="{% url 'study:practice_question' %}">Resume run · {{ run.answered_count }}/{{ run.total }}</a>{% endif %}
+  </div>
+</form>
+{% endblock %}
+{% block aside %}
+<h2>Your progress</h2>
+<dl>
+  {% for r in rows %}<dt class="m">{{ r.domain.slug }}</dt><dd><span class="{% if r.status == 'ok' %}ok{% elif r.status == 'warn' %}wa{% else %}er{% endif %}">{{ r.mastered }}/{{ r.total }}</span> mastered</dd>{% endfor %}
+</dl>
+<p><a href="{% url 'study:practice_reset' %}">Reset progress</a></p>
+{% endblock %}

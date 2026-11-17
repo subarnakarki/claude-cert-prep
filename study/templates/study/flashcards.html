@@ -1,0 +1,50 @@
+{% extends "study/base.html" %}
+{% load static %}
+{% block title %}Flashcards · {% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Flashcards</h1>
+  <p class="lede">{{ cards|length }} card{{ cards|length|pluralize }}{% if domain %} for {{ domain.name }}{% endif %}. Say the answer before you flip.</p>
+</div>
+
+<ul class="filters" aria-label="Filter by domain">
+  <li><a href="{% url 'study:flashcards' %}"{% if not domain %} aria-current="true"{% endif %}>all</a></li>
+  {% for d in domains %}
+  <li><a href="{% url 'study:flashcards' %}?domain={{ d.slug }}"{% if domain == d %} aria-current="true"{% endif %}>{{ d.slug }}</a></li>
+  {% endfor %}
+</ul>
+
+<div class="deck" id="deck" hidden>
+  <button type="button" class="stage" aria-pressed="false" aria-describedby="deck-tip">
+    <span class="side-label"><span class="side">front</span><span class="pos"></span></span>
+    <span class="face" aria-live="polite"></span>
+  </button>
+  <div class="controls">
+    <button type="button" class="btn" data-action="prev">← prev</button>
+    <button type="button" class="btn pr" data-action="flip">flip</button>
+    <button type="button" class="btn" data-action="next">next →</button>
+    <button type="button" class="btn" data-action="shuffle">shuffle</button>
+  </div>
+  <p class="tip" id="deck-tip">Space or click to flip · ← → to move</p>
+</div>
+
+<ol class="cards" id="cards">
+  {% for card in cards %}
+  <li class="card">
+    <div class="tagline">{{ card.domain.slug }}</div>
+    <p class="front">{{ card.front }}</p>
+    <div class="back">{{ card.back_html|safe }}</div>
+  </li>
+  {% empty %}
+  <li class="card">No cards for this domain yet.</li>
+  {% endfor %}
+</ol>
+{% endblock %}
+{% block aside %}
+<h2>Then test it</h2>
+<p>Cards are for recall. Practice questions check whether you can apply it.</p>
+<div class="cta">
+  <a class="btn" href="{% url 'study:practice_setup' %}{% if domain %}?domain={{ domain.slug }}{% endif %}">ccarf practice{% if domain %} --domain {{ domain.slug }}{% endif %}</a>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'study/js/flashcards.js' %}" defer></script>{% endblock %}

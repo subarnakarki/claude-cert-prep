@@ -1,0 +1,36 @@
+{% extends "study/base.html" %}
+{% block content %}
+<h1>Find out what you don't know yet</h1>
+<p class="lede">Practice for the Claude Certified Architect exam across all five domains. Each run updates your readiness, and the next suggested session targets the domain you're weakest in.</p>
+
+<div class="term" role="region" aria-label="Readiness">
+  <div class="bar"><span>readiness</span><span>session {{ runs_started }}</span></div>
+<pre><span class="d">$</span> ccarf status
+
+{% for r in rows %}  <a href="{{ r.domain.get_absolute_url }}" class="p">{{ r.domain.slug|ljust:"12" }}</a>  {{ r.domain.weight|stringformat:"3d" }}%  <span class="{% if r.status == 'ok' %}ok{% elif r.status == 'warn' %}wa{% else %}er{% endif %}" aria-hidden="true">{{ r.bar }}</span><span class="sr-only">{{ r.percent }}% ready</span>  {{ r.mastered|stringformat:"2d" }}/{{ r.total }}
+{% endfor %}
+  <span class="d">mastered</span>    {{ mastered }}/{{ total }}   <span class="d">projected</span> <span class="{% if projected >= pass_line %}ok{% elif projected >= 50 %}wa{% else %}er{% endif %}">{{ projected|floatformat:"0" }}%</span>
+  <span class="d">pass line ≈ {{ pass_line }}%</span>
+  <span class="d">stop_reason</span> <span class="p">"{{ stop_reason }}"</span>  <span class="d">next:</span> {% if stop_reason == "end_turn" %}book the exam{% else %}practice {{ weakest.domain.slug }}{% endif %}</pre>
+</div>
+
+<div class="cta">
+  {% if weakest %}
+  <form method="post" action="{% url 'study:practice_quick_start' weakest.domain.slug %}">
+    {% csrf_token %}
+    <button class="btn pr" type="submit">ccarf practice --domain {{ weakest.domain.slug }}</button>
+  </form>
+  <a class="btn" href="{{ weakest.domain.get_absolute_url }}">Read the notes</a>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block aside %}
+<h2>The exam</h2>
+<dl>
+  {% for term, value in exam_facts %}<dt>{{ term }}</dt><dd>{{ value }}</dd>{% endfor %}
+</dl>
+<h2>How readiness works</h2>
+<p>A question counts as mastered when your latest answer to it was right. Rows turn green at 72%, the pass line. Progress is saved in this browser only.</p>
+<p><a href="{% url 'study:practice_reset' %}">Reset progress</a></p>
+{% endblock %}

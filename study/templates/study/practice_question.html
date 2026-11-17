@@ -1,0 +1,59 @@
+{% extends "study/base.html" %}
+{% load study_tags %}
+{% block title %}Question {{ run.pos|add:1 }} of {{ run.total }} · {% endblock %}
+{% block content %}
+<div class="prog" aria-label="Question {{ run.pos|add:1 }} of {{ run.total }}, {{ run.correct_count }} correct so far"><span aria-hidden="true">{% for mark in run.marks %}{% if mark == "ok" %}<span class="mk-ok">●</span>{% elif mark == "err" %}<span class="er">●</span>{% elif mark == "cur" %}<span class="p">◉</span>{% else %}○{% endif %}{% endfor %}</span><span class="count" aria-hidden="true">{{ run.pos|add:1 }}/{{ run.total }}</span></div>
+
+<div class="msg">
+  <div class="role"><span>question {{ run.pos|add:1 }}</span><span class="p">domain: {{ question.domain.slug }}</span></div>
+  <p class="qp" id="prompt">{{ question.prompt|codeify }}</p>
+</div>
+
+<form method="post" action="{% url 'study:practice_question' %}">
+  {% csrf_token %}
+  {% if question.is_multi and not answer %}<p class="hint" id="hint">Select {{ question.select_count }}</p>{% endif %}
+  <fieldset class="opts" aria-labelledby="prompt"{% if question.is_multi and not answer %} aria-describedby="hint"{% endif %}>
+    {% for o in options %}
+    <label class="opt {{ o.state }}">
+      <input type="{% if question.is_multi %}checkbox{% else %}radio{% endif %}" name="choice" value="{{ o.choice.id }}"{% if o.checked %} checked{% endif %}{% if answer %} disabled{% endif %}>
+      <span class="k" aria-hidden="true">[{{ o.letter }}]</span>
+      <span>{{ o.choice.text|codeify }}{% if o.state == "right" %}<span class="sr-only"> (correct answer)</span>{% elif o.state == "wrong" %}<span class="sr-only"> (your pick, incorrect)</span>{% endif %}</span>
+    </label>
+    {% endfor %}
+  </fieldset>
+  {% if error %}<p class="form-error" role="alert">{{ error }}</p>{% endif %}
+  {% if not answer %}
+  <div class="cta">
+    <button class="btn pr" type="submit">Check answer</button>
+    <a class="btn" href="{% url 'study:practice_results' %}">End session</a>
+  </div>
+  {% endif %}
+</form>
+
+{% if answer %}
+<div class="result" role="status" aria-live="polite">
+  <div class="bar">
+    {% if answer.correct %}<span class="ok">✓ correct</span>{% else %}<span class="er">✗ incorrect</span>{% endif %}
+    <span>you chose {% for l in chosen_letters %}[{{ l }}]{% endfor %}</span>
+    <span>answer {% for l in correct_letters %}[{{ l }}]{% endfor %}</span>
+  </div>
+  <p>{{ question.explanation|codeify }}</p>
+</div>
+<div class="cta">
+  <form method="post" action="{% url 'study:practice_next' %}">
+    {% csrf_token %}
+    <button class="btn pr" type="submit" autofocus>{% if is_last %}See results{% else %}Next question{% endif %}</button>
+  </form>
+  <a class="btn" href="{% url 'study:practice_results' %}">End session</a>
+</div>
+{% endif %}
+{% endblock %}
+{% block aside %}
+<h2>This session</h2>
+<dl>
+  <dt>Answered</dt><dd>{{ run.answered_count }} of {{ run.total }}</dd>
+  <dt>Correct</dt><dd>{{ run.correct_count }}</dd>
+  <dt>Domains</dt><dd>{% if domain %}{{ domain.short_name }}{% else %}All{% endif %}</dd>
+  <dt>Mode</dt><dd>{% if run.mode == "missed" %}Missed only{% elif run.mode == "unanswered" %}Unanswered only{% else %}All questions{% endif %}</dd>
+</dl>
+{% endblock %}

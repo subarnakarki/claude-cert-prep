@@ -1,0 +1,22 @@
+{% extends "study/base.html" %}
+{% load study_tags %}
+{% block title %}Decision rules · {% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Decision rules</h1>
+  <p class="lede">Most questions describe a symptom and ask for the fix. When you recognise the symptom, pick the matching move.</p>
+</div>
+<ol class="rules">
+  {% for rule in rules %}
+  <li>
+    <span class="n">{{ forloop.counter|stringformat:"02d" }}</span>
+    <span class="if">{{ rule.trigger|codeify }}</span>
+    <span class="then">{{ rule.action|codeify }}</span>
+  </li>
+  {% endfor %}
+</ol>
+{% endblock %}
+{% block aside %}
+<h2>How to use these</h2>
+<p>Read the trigger, cover the answer, and say the fix out loud. Answers that fix a problem with a deterministic check usually beat answers that ask the model to try harder.</p>
+{% endblock %}

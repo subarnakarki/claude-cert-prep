@@ -1,0 +1,30 @@
+{% extends "study/base.html" %}
+{% block title %}Domains · {% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Five domains</h1>
+  <p class="lede">Each domain is a share of the 60 scored questions. Start with the heavy ones you're weakest in.</p>
+</div>
+<ul class="dlist">
+  {% for row, d in items %}
+  <li>
+    <span class="num">{{ d.number }}.</span>
+    <h2><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></h2>
+    <div class="meta">
+      <span>{{ d.slug }}</span>
+      <span>{{ d.weight }}% · ≈{{ d.exam_items }} questions</span>
+      <span><span class="rbar {% if row.status == 'ok' %}ok{% elif row.status == 'warn' %}wa{% else %}er{% endif %}" aria-hidden="true">{{ row.bar }}</span> {{ row.mastered }}/{{ row.total }} mastered</span>
+      <span>{{ d.n_tasks }} task statements · <a href="{% url 'study:flashcards' %}?domain={{ d.slug }}">{{ d.n_cards }} cards</a></span>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
+{% block aside %}
+<h2>Reading the bars</h2>
+<dl>
+  <dt class="ok">green</dt><dd>72% or more mastered</dd>
+  <dt class="wa">amber</dt><dd>50–71%</dd>
+  <dt class="er">red</dt><dd>under 50%</dd>
+</dl>
+{% endblock %}

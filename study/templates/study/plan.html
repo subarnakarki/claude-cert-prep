@@ -1,0 +1,67 @@
+{% extends "study/base.html" %}
+{% block title %}Study plan · {% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Ten days to exam-ready</h1>
+  <p class="lede">An hour or two a day. The days follow the domain weights, so the heaviest domain gets the most time. The last days are for practice runs and fixing weak spots.</p>
+</div>
+<ol class="plan">
+  <li><span class="day">day 1</span><div><h3>Map the exam</h3><p>Read the <a href="{% url 'study:domain_list' %}">domain notes</a> end to end without trying to memorise them. Then run one practice session over all domains to get a baseline.</p></div></li>
+  <li><span class="day">day 2</span><div><h3>Agentic loops and orchestration</h3><p>Domain 1, task statements 1.1–1.4: loop control with <code>stop_reason</code>, coordinator and subagent patterns, and passing context between agents. Then the <a href="{% url 'study:flashcards' %}?domain=agentic">agentic flashcards</a>.</p></div></li>
+  <li><span class="day">day 3</span><div><h3>Hooks, handoffs and sessions</h3><p>The rest of domain 1: enforcement hooks, escalation, task decomposition and session resumption. Practise <code>agentic</code> until its row turns amber or green.</p></div></li>
+  <li><span class="day">day 4</span><div><h3>Tool design and MCP</h3><p>Domain 2: tool descriptions, structured errors, how tools are split across agents, and MCP server configuration. Then work through the <a href="{% url 'study:rules' %}">decision rules</a> that mention tools.</p></div></li>
+  <li><span class="day">day 5</span><div><h3>Claude Code configuration</h3><p>Domain 3: the CLAUDE.md hierarchy, rules files, slash commands, skills, plan mode, and non-interactive runs in CI. Do hands-on exercise 2.</p></div></li>
+  <li><span class="day">day 6</span><div><h3>Prompting and structured output</h3><p>Domain 4: explicit criteria, few-shot examples, <code>tool_use</code> with JSON schemas, validation and retry loops, and batch processing. Do hands-on exercise 3.</p></div></li>
+  <li><span class="day">day 7</span><div><h3>Context and reliability</h3><p>Domain 5: keeping case facts intact, escalation triggers, error propagation, exploring large codebases, human review and provenance. Do hands-on exercise 4.</p></div></li>
+  <li><span class="day">day 8</span><div><h3>Scenarios</h3><p>Read all six <a href="{% url 'study:scenarios' %}">scenarios</a>. For each one, list the decision rules it's likely to test. Do hands-on exercise 1.</p></div></li>
+  <li><span class="day">day 9</span><div><h3>Close the gaps</h3><p>Follow the overview's <code>next:</code> suggestion until every row is green. Use the "only ones I missed" mode and reread the notes for each miss.</p></div></li>
+  <li><span class="day">day 10</span><div><h3>Full run, then rest</h3><p>One full practice session over all domains and a quick pass through the flashcards. If the overview says <code>"end_turn"</code>, book the exam.</p></div></li>
+</ol>
+
+<h2 class="section-title">Hands-on exercises</h2>
+<p>The exam guide recommends building these yourself. Each covers several domains, and having built them makes scenario questions far easier to read.</p>
+<ol class="exercises">
+  <li>
+    <h3>1. A multi-tool agent with escalation</h3>
+    <p class="m">agentic · tools_mcp · context</p>
+    <ul>
+      <li>Write an agentic loop that continues on <code>"tool_use"</code> and stops on <code>"end_turn"</code>.</li>
+      <li>Give it three or four tools with distinct descriptions and structured error responses.</li>
+      <li>Add a hook that blocks a policy violation, such as a refund over the limit, and escalates instead.</li>
+    </ul>
+  </li>
+  <li>
+    <h3>2. Claude Code for a team</h3>
+    <p class="m">claude_code</p>
+    <ul>
+      <li>Set up a project CLAUDE.md, a path-scoped rules file and a shared slash command.</li>
+      <li>Add a skill with its own frontmatter, and configure an MCP server for the project.</li>
+      <li>Run Claude Code non-interactively, the way a CI job would.</li>
+    </ul>
+  </li>
+  <li>
+    <h3>3. A structured extraction pipeline</h3>
+    <p class="m">prompting · context</p>
+    <ul>
+      <li>Extract fields from messy documents with <code>tool_use</code> and a JSON schema, including nullable fields.</li>
+      <li>Validate the output and retry with the specific error when it fails.</li>
+      <li>Process a batch, and send low-confidence items to human review.</li>
+    </ul>
+  </li>
+  <li>
+    <h3>4. A multi-agent research system</h3>
+    <p class="m">agentic · tools_mcp · context</p>
+    <ul>
+      <li>Build a coordinator that delegates to subagents, each with scoped tools.</li>
+      <li>Pass context explicitly and keep source attribution all the way to the final synthesis.</li>
+      <li>Return subagent failures as structured errors the coordinator can act on.</li>
+    </ul>
+  </li>
+</ol>
+{% endblock %}
+{% block aside %}
+<h2>Exam weights</h2>
+<dl>
+  {% for d in domains %}<dt class="m">{{ d.slug }}</dt><dd>{{ d.weight }}%</dd>{% endfor %}
+</dl>
+{% endblock %}
