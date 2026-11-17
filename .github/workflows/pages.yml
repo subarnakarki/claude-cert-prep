@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEBUG: "true"
-      DATABASE_PATH: ${{ runner.temp }}/build.sqlite3
+      DATABASE_PATH: build.sqlite3  # throwaway, only used to render the site
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
