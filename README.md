@@ -1,6 +1,6 @@
 # CCAR-F Prep
 
-A study app for the **Claude Certified Architect – Foundations** (CCAR-F) exam. It covers all five exam domains with notes, decision rules, the six exam scenarios, flashcards and 63 practice questions. It tracks how ready you are per domain, and it always suggests practising the domain you're weakest in.
+A study app for the **Claude Certified Architect – Foundations** (CCAR-F) exam. It covers all five exam domains with notes, decision rules, the six exam scenarios, 94 flashcards and 123 practice questions, most of them framed in an exam scenario. It tracks how ready you are per domain, and it always suggests practising the domain you're weakest in.
 
 It's a server-rendered Django app with no build step. It also exports a **static build for GitHub Pages** that you can install on your phone's home screen and use offline.
 
@@ -28,10 +28,11 @@ Screenshots of every page at 1400px and 390px are in [`docs/`](docs/). The appro
   - The primary button, `ccarf practice --domain <slug>`, starts a run for the weakest domain.
 - **Domains:** every task statement for each domain, with "trap" and "what wins" callouts.
 - **Decision rules:** 36 "if this symptom → pick that fix" rows.
-- **Scenarios:** the six exam scenarios, the domains each one covers, and what to look for.
+- **Scenarios:** the six exam scenarios, the domains each one covers, what to look for, and a `ccarf practice --scenario <n>` button to drill one.
 - **Flashcards:** one card at a time, with flip, prev/next, shuffle and arrow keys. Without JavaScript the page shows a readable list of every card.
 - **Practice:**
-  - Pick a domain filter, and a mode: all questions, only the ones you missed, or only unanswered.
+  - Filter by domain and/or scenario, and pick a mode: all questions, only the ones you missed, or only unanswered.
+  - Questions framed in a scenario say so, e.g. `scenario: customer support resolution agent  domain: agentic`.
   - Questions and choices are shuffled once per run.
   - Multi-select questions ("Select TWO") are graded on exact match.
   - After each answer you get feedback in the style of the design: `✗ incorrect  you chose [a]  answer [b]` plus the explanation.
@@ -180,7 +181,8 @@ tests/               pytest-django suites, plus e2e/ for Playwright
 **Content loads in a data migration.**
 - `migrate` alone gives a working app, both in tests (pytest-django runs migrations) and in the Docker entrypoint.
 - The same `content_loader.load()` backs `manage.py load_content`. It upserts on natural keys (domain number, task code, rule/question order, card position) and prunes rows that disappeared from the JSON. Attempts survive reloads unless their question was deleted.
-- It takes a `get_model` callable so the migration can pass historical models. The catch: the migration imports live loader code, so a future schema change has to keep the loader compatible, or freeze a copy into the migration.
+- It takes a `get_model` callable so the migration can pass historical models. The catch: the migration imports live loader code, so the loader has to stay compatible with older schemas. For example, it only sets `Question.scenario` when the model has that field.
+- When the schema changes, add a data migration that reruns the loader (as `0004_reload_content` does). Existing databases, including the Docker volume, then pick up the content on their next `migrate`.
 
 **Grading happens on the server.**
 - The browser only ever sends choice ids. The server checks they belong to the current question, then grades by exact set match: every correct choice and nothing else.
@@ -209,5 +211,5 @@ tests/               pytest-django suites, plus e2e/ for Playwright
 
 ## Content and licences
 
-- **Study content:** `study/content/ccarf.json` holds the domains, task-statement notes, decision rules, scenarios, flashcards and practice questions. The exam facts (60 questions, 120 minutes, 720/1000 to pass, 4 of 6 scenarios, $125) come from the public exam guide; check them against the current guide before you book.
+- **Study content:** `study/content/ccarf.json` holds the domains, task-statement notes, decision rules, scenarios, flashcards and practice questions. Each practice question is grounded in a task statement from the notes, so its explanation matches what the app teaches. Questions can carry a `scenario` number (1–6). `tests/test_content.py` checks the tags, the "Select N" counts, and that the longest choice isn't usually the answer. The exam facts (60 questions, 120 minutes, 720/1000 to pass, 4 of 6 scenarios, $125) come from the public exam guide; check them against the current guide before you book.
 - **Fonts:** Archivo and Atkinson Hyperlegible are licensed under the SIL Open Font License 1.1.
