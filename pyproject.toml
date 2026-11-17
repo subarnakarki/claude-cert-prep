@@ -46,4 +46,6 @@ markers = ["e2e: browser end-to-end tests (Playwright); run with -m e2e"]
 filterwarnings = [
     # WhiteNoise warns that STATIC_ROOT is missing until collectstatic has run.
     "ignore:No directory at:UserWarning",
+    # pytest-playwright's base_url fixture triggers a pytest deprecation (upstream issue).
+    "ignore:Session-scoped fixtures defined as instance methods",
 ]
