@@ -50,6 +50,12 @@ def overview(request):
 
 
 @require_GET
+def guide(request):
+    domains = [(d, round(60 * d.weight / 100)) for d in Domain.objects.all()]
+    return render(request, "study/guide.html", {"domains": domains})
+
+
+@require_GET
 def domain_list(request):
     rows = progress.readiness(_session_key(request))
     counts = {

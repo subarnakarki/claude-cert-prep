@@ -117,6 +117,7 @@ def main() -> None:
                 shot(page, args.out, f"{name}-{label}", args.full_page)
 
             capture("/", "overview")
+            capture("/guide/", "guide")
             capture("/domains/", "domains")
             capture("/domains/agentic/", "domain-detail")
             capture("/rules/", "rules")

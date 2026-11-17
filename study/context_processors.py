@@ -4,6 +4,7 @@ from django.urls import reverse
 # (label, url name, url-name prefix that marks the section as current)
 NAV = [
     ("overview", "study:overview", "overview"),
+    ("guide", "study:guide", "guide"),
     ("domains", "study:domain_list", "domain_"),
     ("rules", "study:rules", "rules"),
     ("scenarios", "study:scenarios", "scenarios"),

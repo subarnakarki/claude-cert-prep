@@ -37,6 +37,7 @@ def test_every_page_is_written(site):
         "domains/index.html",
         "domains/agentic/index.html",
         "domains/tools_mcp/index.html",
+        "guide/index.html",
         "rules/index.html",
         "scenarios/index.html",
         "flashcards/index.html",

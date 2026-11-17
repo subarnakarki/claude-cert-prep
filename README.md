@@ -26,6 +26,7 @@ Screenshots of every page at 1400px and 390px are in [`docs/`](docs/). The appro
   - A projected score: Σ(weight × mastered/total).
   - A `stop_reason` line. It reads `"tool_use"` with `next: practice <weakest domain>` and switches to `"end_turn"` (book the exam) once every domain is at 85% or more.
   - The primary button, `ccarf practice --domain <slug>`, starts a run for the weakest domain.
+- **Guide (`/guide/`):** a one-page exam briefing. It covers exam logistics with domain weights, how questions are written, ten principles, essentials per domain, key values and where things live, wrong-answer patterns, and a night-before checklist.
 - **Domains:** every task statement for each domain, with "trap" and "what wins" callouts.
 - **Decision rules:** 36 "if this symptom → pick that fix" rows.
 - **Scenarios:** the six exam scenarios, the domains each one covers, what to look for, and a `ccarf practice --scenario <n>` button to drill one.

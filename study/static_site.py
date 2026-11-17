@@ -41,6 +41,7 @@ def page_paths() -> list[str]:
     slugs = list(Domain.objects.values_list("slug", flat=True))
     return [
         "",
+        "guide/",
         "domains/",
         *[f"domains/{slug}/" for slug in slugs],
         "rules/",

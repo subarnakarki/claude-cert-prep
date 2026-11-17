@@ -8,6 +8,7 @@ pytestmark = pytest.mark.django_db
 
 PAGES = [
     "/",
+    "/guide/",
     "/domains/",
     "/rules/",
     "/scenarios/",

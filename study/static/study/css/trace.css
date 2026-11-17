@@ -292,6 +292,40 @@ select {
 .exercises ul { margin: .4rem 0 0; padding-left: 1.2rem; }
 .exercises .m { color: var(--dim); font-size: .85rem; }
 
+/* Exam guide */
+.weights { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 1rem 1.2rem; margin: 0 0 1.6rem; }
+.w-row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 6.5rem; gap: .4rem 1rem; align-items: center; padding: .35rem 0; }
+.w-name { color: var(--text); text-decoration: none; font-size: .95rem; }
+.w-name:hover { color: var(--blue); }
+.w-name .m { color: var(--dim); }
+.w-bar { height: .55rem; background: var(--line); border-radius: 99px; overflow: hidden; }
+.w-bar span { display: block; height: 100%; background: var(--blue); border-radius: 99px; }
+.w-val { font-size: .9rem; text-align: right; white-space: nowrap; }
+.w-note { color: var(--dim); font-size: .82rem; margin: .7rem 0 0; }
+.gtable-wrap { overflow-x: auto; margin: 0 0 1.6rem; border: 1px solid var(--line); border-radius: 10px; }
+.gtable { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.gtable th, .gtable td { text-align: left; vertical-align: top; padding: .65rem .9rem; border-bottom: 1px solid var(--line); }
+.gtable tr:last-child > * { border-bottom: 0; }
+.gtable thead th { font-family: var(--mono); font-weight: 400; font-size: .85rem; color: var(--dim); background: var(--panel); }
+.gtable tbody th { font-weight: 700; white-space: nowrap; }
+.gtable.traps td:last-child { color: var(--dim); }
+.glist, .steps { margin: .4rem 0 1.2rem; padding-left: 1.3rem; }
+.glist li, .steps li { margin: .3rem 0; }
+.glist li::marker, .steps li::marker { color: var(--dim); }
+.principles li > div { min-width: 0; }
+.essentials h3 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
+.essentials h3:first-child { margin-top: 1rem; }
+.essentials h3 a { color: var(--text); text-decoration: none; }
+.essentials h3 a:hover { color: var(--blue); }
+.essentials h3 .m { font-size: .9rem; font-weight: 400; margin-left: .4rem; }
+.essentials ul { margin: 0; padding-left: 1.2rem; }
+.essentials li { margin: .35rem 0; }
+.essentials li::marker { color: var(--dim); }
+.checklist { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.checklist li { padding: .7rem 0 .7rem 2.4rem; border-bottom: 1px solid var(--line); position: relative; }
+.checklist li::before { content: "[ ]"; position: absolute; left: 0; font-family: var(--mono); color: var(--blue); }
+.source { font-size: .88rem; margin-top: 2rem; }
+
 /* Sidebar link lists */
 .linklist { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; font-size: .95rem; }
 
@@ -314,6 +348,9 @@ select {
   .task { grid-template-columns: 2.6rem minmax(0, 1fr); gap: .6rem; }
   .btn { padding: .7rem .95rem; }
   .score { font-size: 2.4rem; }
+  .w-row { grid-template-columns: minmax(0, 1fr) 6rem; }
+  .w-bar { grid-column: 1 / -1; grid-row: 2; }
+  .gtable tbody th { white-space: normal; }
 }
 
 @media (prefers-reduced-motion: reduce) {

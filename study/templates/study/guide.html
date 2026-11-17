@@ -1,0 +1,214 @@
+{% extends "study/base.html" %}
+{% block title %}Exam guide · {% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>What you need to know</h1>
+  <p class="lede">CCAR-F is 60 scenario-based questions in 120 minutes, and you pass at 720 on a 100–1,000 scale. It tests whether you can make sound architecture decisions with Claude Code, the Claude Agent SDK, the Claude API and MCP. It doesn't test recall of trivia.</p>
+</div>
+
+<h2 class="section-title" id="glance">Exam at a glance</h2>
+<div class="weights" role="img" aria-label="Domain weights: {% for d, n in domains %}{{ d.short_name }} {{ d.weight }}%{% if not forloop.last %}, {% endif %}{% endfor %}">
+  {% for d, n in domains %}
+  <div class="w-row">
+    <a class="w-name" href="{{ d.get_absolute_url }}"><span class="m">{{ d.number }}.</span> {{ d.name }}</a>
+    <span class="w-bar"><span style="width: {% widthratio d.weight 30 100 %}%"></span></span>
+    <span class="w-val m">{{ d.weight }}% <span class="d">· ~{{ n }} q</span></span>
+  </div>
+  {% endfor %}
+  <p class="w-note">Domain weights from the exam guide v1.0. Question counts are 60 × weight, rounded.</p>
+</div>
+
+<div class="gtable-wrap">
+<table class="gtable">
+  <thead><tr><th scope="col">Item</th><th scope="col">Detail</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Questions</th><td>60, multiple choice (one answer) and multiple response (select 2 or more)</td></tr>
+    <tr><th scope="row">Time</th><td>120 minutes, about 2 minutes per question</td></tr>
+    <tr><th scope="row">Passing score</th><td>720 scaled (roughly 72%); domain sub-scores are reported but don't decide pass/fail</td></tr>
+    <tr><th scope="row">Scenarios</th><td>4 drawn at random from a bank of 6</td></tr>
+    <tr><th scope="row">Delivery</th><td>Proctored, online or at a Pearson VUE test center</td></tr>
+    <tr><th scope="row">Fee and validity</th><td>$125; valid 12 months; free non-proctored renewal if done on time</td></tr>
+    <tr><th scope="row">Retakes</th><td>Wait 14 days after a 1st fail, 30 after a 2nd, 90 after a 3rd; max 4 attempts in 12 months</td></tr>
+    <tr><th scope="row">Target candidate</th><td>Solution architect with 6+ months of hands-on Claude experience</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p><strong>The six scenarios</strong> (<a href="{% url 'study:scenarios' %}">see them all</a>):</p>
+<ul class="glist">
+  <li>Customer Support Resolution Agent</li>
+  <li>Code Generation with Claude Code</li>
+  <li>Multi-Agent Research System</li>
+  <li>Developer Productivity with Claude</li>
+  <li>Claude Code for Continuous Integration</li>
+  <li>Structured Data Extraction</li>
+</ul>
+<p><strong>Out of scope:</strong> fine-tuning, auth and billing, hosting MCP servers, cloud-provider specifics, model internals, embeddings and vector DBs, computer use, vision, streaming, rate limits and pricing math, tokenization.</p>
+
+<h2 class="section-title" id="questions">How questions are written</h2>
+<p>Every question sets up a system with a symptom and asks for the <strong>best</strong>, <strong>first</strong> or <strong>most reliable</strong> fix. Usually all four options would work to some degree. You score by knowing why three of them are worse.</p>
+<ol class="steps">
+  <li><strong>Find the symptom and the stakes.</strong> Is the failure costly (money, identity, compliance) or just quality? High stakes push toward deterministic fixes.</li>
+  <li><strong>Find the root cause.</strong> Most stems describe one: thin tool descriptions, missing context passed to a subagent, vague criteria, a schema that forces a value.</li>
+  <li><strong>Read the qualifier.</strong> "First step" favors the cheapest fix aimed at the root cause. "Most reliable" favors something deterministic. "Best" weighs both.</li>
+  <li><strong>Eliminate, then choose.</strong> Cross out options that rely on prompt wording for a hard rule, add infrastructure before fixing the obvious cause, or depend on self-reported confidence.</li>
+  <li><strong>On "select 2", pick two complementary fixes</strong>, not two versions of the same idea.</li>
+</ol>
+<p class="d">Pace yourself at about 2 minutes a question. Flag anything that runs past 3 minutes and come back to it.</p>
+
+<h2 class="section-title" id="principles">Ten principles that answer most questions</h2>
+<p>These ideas show up across every domain. If you only remember one section, make it this one.</p>
+<ol class="rules principles">
+  <li><span class="n">01</span><div><strong>Hard rules belong in code, not prompts.</strong> When a requirement must hold every time (refund limits, identity checks, compliance), use a hook, a prerequisite gate or a schema. Prompt instructions always have a failure rate.</div></li>
+  <li><span class="n">02</span><div><strong>Fix the root cause with the simplest tool first.</strong> Wrong tool picked? Improve the tool descriptions before building routers or classifiers. Inconsistent output? Add examples before adding infrastructure.</div></li>
+  <li><span class="n">03</span><div><strong>Be specific, not vague.</strong> "Be conservative" or "be careful" never wins. Explicit categories of what to report and what to skip, plus 2–4 examples that show the reasoning, do.</div></li>
+  <li><span class="n">04</span><div><strong>Subagents start with nothing.</strong> They don't inherit the coordinator's conversation. Pass everything they need in the prompt, and keep content separate from metadata such as source and page.</div></li>
+  <li><span class="n">05</span><div><strong>Let structured signals drive control flow.</strong> Loop on <code>stop_reason</code> (<code>tool_use</code> means continue, <code>end_turn</code> means stop), not on parsed text or an iteration cap. Return structured errors, not "Operation failed".</div></li>
+  <li><span class="n">06</span><div><strong>Never hide failure.</strong> Keep "couldn't check" separate from "checked, found nothing". Return partial results with the error. Don't abort the whole workflow because one part failed.</div></li>
+  <li><span class="n">07</span><div><strong>Less is more for tools and context.</strong> Give each agent 4–5 tools scoped to its role. Trim tool output to the fields that matter. Put key facts at the start of long inputs.</div></li>
+  <li><span class="n">08</span><div><strong>Self-reported confidence and sentiment are unreliable.</strong> Route on explicit criteria, or on confidence that has been calibrated against labeled data.</div></li>
+  <li><span class="n">09</span><div><strong>Independent review beats self-review.</strong> A fresh session or instance catches what the generating session misses.</div></li>
+  <li><span class="n">10</span><div><strong>Schemas fix syntax, not truth.</strong> JSON schemas guarantee shape, not correctness. Add semantic checks (calculated vs stated totals), nullable fields so the model doesn't invent values, and "other"/"unclear" enum options.</div></li>
+</ol>
+
+<h2 class="section-title" id="domains">Domain essentials</h2>
+<p>Domain 1 alone is over a quarter of the exam, and domains 3 and 4 together are another 40%. Weight your study time the same way.</p>
+
+<div class="essentials">
+<h3><a href="{% url 'study:domain_detail' 'agentic' %}">1. Agentic Architecture &amp; Orchestration</a> <span class="m d">27%</span></h3>
+<ul>
+  <li><strong>Agent loop:</strong> send → check <code>stop_reason</code> → on <code>tool_use</code>, run the tools, append the results, loop → on <code>end_turn</code>, stop.</li>
+  <li><strong>Hub-and-spoke:</strong> the coordinator owns routing, errors and synthesis. Subagents never talk to each other.</li>
+  <li><strong>Spawning:</strong> the coordinator's <code>allowedTools</code> must include <code>"Task"</code>. Send independent Task calls in one response so they run in parallel.</li>
+  <li><strong>Gaps in a report</strong> usually trace back to the coordinator splitting the topic too narrowly.</li>
+  <li><strong>Hooks:</strong> PostToolUse normalizes mixed data such as timestamps. Interception hooks block policy violations (e.g. refunds over $500) and route them to a human.</li>
+  <li><strong>Decomposition:</strong> use fixed chains for predictable work and dynamic plans for open-ended work.</li>
+  <li><strong>Sessions:</strong> <code>--resume</code> continues a named session, and you should tell it which files changed. <code>fork_session</code> branches to compare approaches. Start fresh with a summary when the old results are stale.</li>
+  <li><strong>Human handoff</strong> needs a structured summary: customer ID, root cause, amounts, recommended action.</li>
+</ul>
+
+<h3><a href="{% url 'study:domain_detail' 'tools_mcp' %}">2. Tool Design &amp; MCP Integration</a> <span class="m d">18%</span></h3>
+<ul>
+  <li><strong>Tool description</strong> is the main signal for tool choice: input formats, examples, edge cases, how it differs from similar tools.</li>
+  <li><strong>Structured errors:</strong> <code>isError</code>, <code>errorCategory</code> (transient / validation / business / permission), <code>isRetryable</code>.</li>
+  <li><strong><code>tool_choice</code>:</strong> <code>auto</code> lets the model decide. <code>any</code> forces some tool call. <code>{"type":"tool","name":"x"}</code> forces tool x.</li>
+  <li><strong>Config scope:</strong> <code>.mcp.json</code> is the shared project config (secrets via <code>${ENV_VAR}</code>). <code>~/.claude.json</code> is personal.</li>
+  <li><strong>Build vs reuse:</strong> use community servers for standard integrations and custom ones for team-specific needs. Expose catalogs as MCP resources.</li>
+  <li><strong>Built-in tools:</strong> Grep searches file contents, Glob matches file names. Edit needs a unique anchor; otherwise fall back to Read + Write.</li>
+</ul>
+
+<h3><a href="{% url 'study:domain_detail' 'claude_code' %}">3. Claude Code Configuration &amp; Workflows</a> <span class="m d">20%</span></h3>
+<ul>
+  <li><strong>CLAUDE.md levels:</strong> user <code>~/.claude/CLAUDE.md</code> (not shared), project <code>.claude/CLAUDE.md</code> or the repo root, and directory level. Run <code>/memory</code> to see which files are loaded.</li>
+  <li><strong>Path-scoped rules:</strong> <code>.claude/rules/*.md</code> with <code>paths:</code> globs load only for matching files and work across directories.</li>
+  <li><strong>Commands and skills:</strong> shared commands live in <code>.claude/commands/</code>, personal ones in <code>~/.claude/commands/</code>. Skills go in <code>.claude/skills/</code> with <code>context: fork</code>, <code>allowed-tools</code> and <code>argument-hint</code>. Skills load on demand; CLAUDE.md is always loaded.</li>
+  <li><strong>Plan mode vs direct execution:</strong> use plan mode for large, multi-file or architectural changes and direct execution for clear, scoped fixes.</li>
+  <li><strong>CI:</strong> run with <code>-p</code> (non-interactive) and <code>--output-format json --json-schema</code>. On re-review, report only new issues, and review in an independent session.</li>
+  <li><strong>Refinement:</strong> give 2–3 concrete input/output examples when prose is misread. Use the interview pattern in unfamiliar domains.</li>
+</ul>
+
+<h3><a href="{% url 'study:domain_detail' 'prompting' %}">4. Prompt Engineering &amp; Structured Output</a> <span class="m d">20%</span></h3>
+<ul>
+  <li><strong>Review criteria:</strong> explicit categories beat vague wording. Temporarily disable noisy categories to rebuild trust.</li>
+  <li><strong>Few-shot:</strong> 2–4 examples of ambiguous cases, showing the reasoning and the output format.</li>
+  <li><strong>Schemas:</strong> make fields nullable when the source may lack them, and add <code>other</code> + a detail field and <code>unclear</code> to enums.</li>
+  <li><strong>Retries</strong> include the document, the failed output and the specific errors. They fix format, not missing information.</li>
+  <li><strong>Batch API:</strong> 50% cheaper, up to 24 hours, no SLA, no multi-turn tool use, matched by <code>custom_id</code>. Use it for overnight and weekly jobs, never for blocking checks.</li>
+  <li><strong>SLA math:</strong> submission window + 24 hours ≤ the SLA.</li>
+</ul>
+
+<h3><a href="{% url 'study:domain_detail' 'context' %}">5. Context Management &amp; Reliability</a> <span class="m d">15%</span></h3>
+<ul>
+  <li><strong>Case facts:</strong> keep amounts, dates and promises in a persistent case-facts block outside the summarized history.</li>
+  <li><strong>Lost in the middle:</strong> put key findings first and use clear headers.</li>
+  <li><strong>Escalate on:</strong> an explicit request for a human (right away), a policy gap, or no progress. A frustrated customer with a simple issue gets the issue resolved first.</li>
+  <li><strong>Ambiguous matches:</strong> if several records match, ask for another identifier rather than guessing.</li>
+  <li><strong>Long sessions:</strong> use scratchpad files, subagents, phase summaries and <code>/compact</code>. Use a manifest for crash recovery.</li>
+  <li><strong>97% overall accuracy</strong> can hide weak spots. Break it down by document type and field, and sample before cutting human review.</li>
+  <li><strong>Conflicting sources:</strong> report both with attribution and dates.</li>
+</ul>
+</div>
+
+<h2 class="section-title" id="values">Key values and where things live</h2>
+<p>These exact names show up in answer options. Distractors often name features that don't exist, such as a <code>commands</code> array in <code>config.json</code>.</p>
+<div class="gtable-wrap">
+<table class="gtable">
+  <thead><tr><th scope="col">You need to…</th><th scope="col">Use</th></tr></thead>
+  <tbody>
+    <tr><td>Keep looping after a tool call</td><td><code>stop_reason == "tool_use"</code></td></tr>
+    <tr><td>Stop the loop</td><td><code>stop_reason == "end_turn"</code></td></tr>
+    <tr><td>Force some tool call (unknown doc type)</td><td><code>tool_choice: "any"</code></td></tr>
+    <tr><td>Force one specific tool first</td><td><code>tool_choice: {"type":"tool","name":"x"}</code></td></tr>
+    <tr><td>Let a coordinator spawn subagents</td><td><code>"Task"</code> in <code>allowedTools</code></td></tr>
+    <tr><td>Share an MCP server with the team</td><td>Project <code>.mcp.json</code> + <code>${TOKEN}</code></td></tr>
+    <tr><td>Use a personal MCP server</td><td><code>~/.claude.json</code></td></tr>
+    <tr><td>Set a personal preference</td><td><code>~/.claude/CLAUDE.md</code></td></tr>
+    <tr><td>Set team conventions</td><td><code>.claude/CLAUDE.md</code> or root <code>CLAUDE.md</code></td></tr>
+    <tr><td>Apply rules only to some files</td><td><code>.claude/rules/x.md</code> with <code>paths: ["glob"]</code></td></tr>
+    <tr><td>Share a slash command</td><td><code>.claude/commands/</code></td></tr>
+    <tr><td>Isolate a noisy skill / limit its tools</td><td><code>context: fork</code> / <code>allowed-tools</code></td></tr>
+    <tr><td>See which memory files are loaded</td><td><code>/memory</code></td></tr>
+    <tr><td>Free up context</td><td><code>/compact</code></td></tr>
+    <tr><td>Run Claude Code in CI</td><td><code>claude -p</code></td></tr>
+    <tr><td>Get parseable CI output</td><td><code>--output-format json --json-schema</code></td></tr>
+    <tr><td>Continue / branch a session</td><td><code>--resume &lt;name&gt;</code> / <code>fork_session</code></td></tr>
+    <tr><td>Match batch results</td><td><code>custom_id</code></td></tr>
+    <tr><td>Normalize tool output</td><td>PostToolUse hook</td></tr>
+    <tr><td>Block a policy violation</td><td>Interception (pre-tool) hook</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 class="section-title" id="traps">Wrong-answer patterns to eliminate</h2>
+<p>If an option matches one of these, it's almost always wrong. Cross it out first.</p>
+<div class="gtable-wrap">
+<table class="gtable traps">
+  <thead><tr><th scope="col">The option…</th><th scope="col">Why it loses</th></tr></thead>
+  <tbody>
+    <tr><td>Strengthens prompt wording for a must-hold rule (caps, "IMPORTANT", repetition)</td><td>Still probabilistic, so a hook or gate is needed</td></tr>
+    <tr><td>Builds a classifier, router or new service as the <em>first</em> step</td><td>Over-engineered when a description or criteria fix addresses the cause</td></tr>
+    <tr><td>Routes on model self-confidence or customer sentiment</td><td>Unreliable signals</td></tr>
+    <tr><td>Detects completion by parsing text, or relies on an iteration cap</td><td><code>stop_reason</code> is the signal</td></tr>
+    <tr><td>Returns empty results or "success" on failure</td><td>Hides the failure from the coordinator</td></tr>
+    <tr><td>Aborts the whole workflow when one subagent fails</td><td>Should return partial results and note the gap</td></tr>
+    <tr><td>Gives one agent many tools, or merges tools as a first fix</td><td>Selection gets worse; scope tools by role</td></tr>
+    <tr><td>Uses the Batch API for blocking or interactive work</td><td>No SLA, no multi-turn tool use</td></tr>
+    <tr><td>Puts personal settings in shared files, or team settings in personal ones</td><td>Wrong scope</td></tr>
+    <tr><td>Makes a field required when the source may not have it</td><td>Forces fabricated values</td></tr>
+    <tr><td>Picks one of two conflicting sources, or averages them</td><td>Report both with attribution</td></tr>
+    <tr><td>Pushes the fix onto people ("ask developers to write smaller PRs")</td><td>Doesn't fix the system</td></tr>
+    <tr><td>Names a flag, file or setting you've never seen</td><td>Likely invented</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 class="section-title" id="checklist">Night-before checklist</h2>
+<ul class="checklist">
+  <li>I can explain why <code>stop_reason</code> drives the loop and what each value means</li>
+  <li>I know when to use a hook instead of a prompt, and which hook does what</li>
+  <li>I know subagents get no history and need <code>"Task"</code> in <code>allowedTools</code></li>
+  <li>I can name the four MCP error categories and the three <code>tool_choice</code> modes</li>
+  <li>I know where every CLAUDE.md, rules, commands, skills and MCP config file lives, and who it's shared with</li>
+  <li>I know when to use plan mode, <code>-p</code>, and an independent review session</li>
+  <li>I know the four Batch API facts and can do the SLA math</li>
+  <li>I know the three escalation triggers and the two unreliable signals</li>
+  <li>I can list the wrong-answer patterns from memory</li>
+  <li>My score on full <a href="{% url 'study:practice_setup' %}">practice runs</a> is 85% or higher in every domain</li>
+</ul>
+
+<p class="d source">Source: the official CCAR-F Exam Guide v1.0 (July 2026). Check logistics with Anthropic Partner Academy / Pearson VUE before booking.</p>
+{% endblock %}
+{% block aside %}
+<h2>On this page</h2>
+<ul class="linklist">
+  <li><a href="#glance">Exam at a glance</a></li>
+  <li><a href="#questions">How questions are written</a></li>
+  <li><a href="#principles">Ten principles</a></li>
+  <li><a href="#domains">Domain essentials</a></li>
+  <li><a href="#values">Key values</a></li>
+  <li><a href="#traps">Wrong-answer patterns</a></li>
+  <li><a href="#checklist">Night-before checklist</a></li>
+</ul>
+<h2>Next</h2>
+<p>Turn the principles into reflexes with the <a href="{% url 'study:rules' %}">decision rules</a>, then drill a weak domain in <a href="{% url 'study:practice_setup' %}">practice</a>.</p>
+{% endblock %}
