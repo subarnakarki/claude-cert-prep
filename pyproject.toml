@@ -1,0 +1,49 @@
+[project]
+name = "ccarf-prep"
+version = "1.0.0"
+description = "A study app for the Claude Certified Architect – Foundations (CCAR-F) exam."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django~=5.2.0",
+    "gunicorn>=23.0",
+    "python-dotenv>=1.0",
+    "whitenoise>=6.7",
+]
+
+[dependency-groups]
+dev = [
+    "fonttools[woff]>=4.50",
+    "pytest>=8.0",
+    "pytest-django>=4.9",
+    "pytest-playwright>=0.5",
+    "ruff>=0.6",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["study/migrations/0001_initial.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "DJ", "SIM", "RUF", "PT"]
+ignore = [
+    "RUF001", "RUF002", "RUF003",  # the UI and docs intentionally use ✓ ✗ › ● – glyphs
+    "RUF012",  # Django admin/Meta class attributes are idiomatically mutable lists
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["config", "study"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings_test"
+testpaths = ["tests"]
+addopts = "-ra -m 'not e2e'"
+markers = ["e2e: browser end-to-end tests (Playwright); run with -m e2e"]
+filterwarnings = [
+    # WhiteNoise warns that STATIC_ROOT is missing until collectstatic has run.
+    "ignore:No directory at:UserWarning",
+]
