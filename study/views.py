@@ -241,6 +241,7 @@ def practice_results(request):
                 "percent": math.floor(ratio * 100),
                 "status": progress.status_for(ratio),
                 "bar": progress.text_bar(ratio),
+                "ratio": ratio,
             }
         )
     score = run.correct_count / run.answered_count if run.answered_count else 0

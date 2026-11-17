@@ -1,4 +1,5 @@
 {% extends "study/base.html" %}
+{% load study_tags %}
 {% block title %}Results · {% endblock %}
 {% block content %}
 <div class="page-head">
@@ -11,7 +12,7 @@
   <div class="bar"><span>score by domain</span><span>{{ run.answered_count }} answered</span></div>
 <pre><span class="d">$</span> ccarf results
 
-{% for r in domain_rows %}  <span class="p">{{ r.domain.slug|ljust:"12" }}</span>  <span class="{% if r.status == 'ok' %}ok{% elif r.status == 'warn' %}wa{% else %}er{% endif %}" aria-hidden="true">{{ r.bar }}</span>  {{ r.percent|stringformat:"3d" }}%  {{ r.correct|stringformat:"2d" }}/{{ r.answered }}
+{% for r in domain_rows %}  <span class="p">{{ r.domain.slug|ljust:"12" }}</span>  <span class="{% if r.status == 'ok' %}ok{% elif r.status == 'warn' %}wa{% else %}er{% endif %}" aria-hidden="true"><span class="lg">{{ r.bar }}</span><span class="sm">{{ r.ratio|bar:10 }}</span></span>  {{ r.percent|stringformat:"3d" }}%  {{ r.correct|stringformat:"2d" }}/{{ r.answered }}
 {% endfor %}</pre>
 </div>
 {% else %}

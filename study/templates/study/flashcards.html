@@ -1,5 +1,5 @@
 {% extends "study/base.html" %}
-{% load static %}
+{% load static study_tags %}
 {% block title %}Flashcards · {% endblock %}
 {% block content %}
 <div class="page-head">
@@ -32,7 +32,7 @@
   {% for card in cards %}
   <li class="card">
     <div class="tagline">{{ card.domain.slug }}</div>
-    <p class="front">{{ card.front }}</p>
+    <p class="front">{{ card.front|codeify }}</p>
     <div class="back">{{ card.back_html|safe }}</div>
   </li>
   {% empty %}

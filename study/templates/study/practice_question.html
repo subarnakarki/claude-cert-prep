@@ -2,7 +2,7 @@
 {% load study_tags %}
 {% block title %}Question {{ run.pos|add:1 }} of {{ run.total }} · {% endblock %}
 {% block content %}
-<div class="prog" aria-label="Question {{ run.pos|add:1 }} of {{ run.total }}, {{ run.correct_count }} correct so far"><span aria-hidden="true">{% for mark in run.marks %}{% if mark == "ok" %}<span class="mk-ok">●</span>{% elif mark == "err" %}<span class="er">●</span>{% elif mark == "cur" %}<span class="p">◉</span>{% else %}○{% endif %}{% endfor %}</span><span class="count" aria-hidden="true">{{ run.pos|add:1 }}/{{ run.total }}</span></div>
+<div class="prog" aria-label="Question {{ run.pos|add:1 }} of {{ run.total }}, {{ run.correct_count }} correct so far"><span class="marks" aria-hidden="true">{% for mark in run.marks %}{% if mark == "ok" %}<span class="mk-ok">●</span>{% elif mark == "err" %}<span class="er">●</span>{% elif mark == "cur" %}<span class="p">◉</span>{% else %}○{% endif %}{% endfor %}</span><span class="count" aria-hidden="true">{{ run.pos|add:1 }}/{{ run.total }}</span></div>
 
 <div class="msg">
   <div class="role"><span>question {{ run.pos|add:1 }}</span><span class="p">domain: {{ question.domain.slug }}</span></div>
@@ -42,7 +42,7 @@
 <div class="cta">
   <form method="post" action="{% url 'study:practice_next' %}">
     {% csrf_token %}
-    <button class="btn pr" type="submit" autofocus>{% if is_last %}See results{% else %}Next question{% endif %}</button>
+    <button class="btn pr" type="submit">{% if is_last %}See results{% else %}Next question{% endif %}</button>
   </form>
   <a class="btn" href="{% url 'study:practice_results' %}">End session</a>
 </div>

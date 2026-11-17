@@ -40,7 +40,8 @@ def test_practice_session_end_to_end(site, page: Page):
     expect(result).to_be_visible()
     expect(result).to_contain_text(re.compile(r"[✓✗] (correct|incorrect)"))
     expect(result).to_contain_text("answer [")
-    expect(page.locator(".opt.right")).to_have_count(1)
+    # Every correct choice gets the green outline (two for "Select TWO" questions).
+    expect(page.locator(".opt.right").first).to_be_visible()
 
     page.get_by_role("link", name="End session").first.click()
     expect(page.get_by_role("heading", name="Session results")).to_be_visible()

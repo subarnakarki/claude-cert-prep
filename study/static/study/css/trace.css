@@ -13,7 +13,8 @@
   --err: #F47174;
   --warn: #E6C07B;
   --on-blue: #0E1A26;
-  --mono: "Atkinson Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  /* The brand fonts have no ● ◉ ○ ✓ ✗ █ ░ glyphs; list fallbacks that do, per OS. */
+  --mono: "Atkinson Mono", ui-monospace, Menlo, "SFMono-Regular", "DejaVu Sans Mono", Consolas, "Segoe UI Symbol", monospace;
   --sans: "Atkinson Next", system-ui, sans-serif;
   --display: "Archivo", var(--sans);
   color-scheme: dark;
@@ -88,6 +89,7 @@ h2, h3 { font-family: var(--display); font-stretch: 90%; font-weight: 600; line-
   border-bottom: 1px solid var(--line); color: var(--dim); font-size: .85rem;
 }
 .term pre { margin: 0; padding: 1.1rem 1.2rem; white-space: pre; overflow-x: auto; line-height: 1.75; font: inherit; }
+.term pre .sm { display: none; }
 .term pre a { color: var(--blue); text-decoration: none; }
 .term pre a:hover { text-decoration: underline; }
 .p { color: var(--blue); }
@@ -144,6 +146,7 @@ dd { margin: 0; }
   font-family: var(--mono); font-size: .9rem; color: var(--dim); margin-bottom: 1.6rem;
   letter-spacing: .08em; overflow-wrap: anywhere;
 }
+.prog .marks { font-size: 1.2em; line-height: 1; letter-spacing: .02em; }
 .prog .mk-ok { color: var(--text); }
 .prog .count { letter-spacing: 0; margin-left: .6rem; white-space: nowrap; }
 
@@ -240,7 +243,8 @@ dd { margin: 0; }
 /* Flashcards: single-card deck when JS is on */
 .deck[hidden] { display: none; }
 .deck .stage {
-  display: block; width: 100%; min-height: 15rem; text-align: left; font: inherit; color: inherit;
+  display: flex; flex-direction: column; justify-content: flex-start;
+  width: 100%; min-height: 15rem; text-align: left; font: inherit; color: inherit;
   background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
   padding: 1.2rem 1.3rem; cursor: pointer; transition: border-color .15s ease;
 }
@@ -262,7 +266,8 @@ select {
   border: 1px solid var(--line); border-radius: 8px; padding: .7rem .8rem;
 }
 .radios { display: grid; gap: .5rem; }
-.radios .opt { grid-template-columns: 1.6rem 1fr; }
+.radios .opt { grid-template-columns: 2.4rem 1fr; }
+.radios .opt .k { white-space: nowrap; }
 .radios .opt .k::before { content: "( )"; }
 .radios .opt:has(input:checked) .k::before { content: "(•)"; }
 
@@ -295,8 +300,13 @@ select {
   .hi { flex-wrap: wrap; gap: .5rem 1.4rem; white-space: normal; }
   nav ul { flex-wrap: wrap; gap: .3rem 1.1rem; }
   main { padding: 1.6rem 1rem 4rem; }
-  .term { font-size: .8rem; }
+  .term { font-size: .82rem; }
   .term pre { padding: 1rem .9rem; }
+  /* Narrow screens: a 10-cell bar, and the footer breaks onto extra lines. */
+  .term pre .lg { display: none; }
+  .term pre .sm { display: inline; }
+  .term pre .brk { display: none; }
+  .term pre .brk + span::before { content: "\A   "; } /* the escape eats one space */
   .task { grid-template-columns: 2.6rem minmax(0, 1fr); gap: .6rem; }
   .btn { padding: .7rem .95rem; }
   .score { font-size: 2.4rem; }
