@@ -1,7 +1,10 @@
+from collections import Counter
+from types import SimpleNamespace
+
 import pytest
 from django.apps import apps
 
-from study.content_loader import load, read_content
+from study.content_loader import SLUGS, load, read_content
 from study.models import Attempt, Domain, Question
 
 
@@ -9,6 +12,20 @@ from study.models import Attempt, Domain, Question
 def content() -> dict:
     """The raw JSON content file."""
     return read_content()
+
+
+@pytest.fixture(scope="session")
+def expected(content) -> SimpleNamespace:
+    """Counts derived from the content file, so adding content doesn't break tests."""
+    multi = [q for q in content["questions"] if sum(c["is_correct"] for c in q["choices"]) > 1]
+    return SimpleNamespace(
+        questions=len(content["questions"]),
+        flashcards=len(content["flashcards"]),
+        multi=len(multi),
+        multi_choices=sum(len(q["choices"]) for q in multi),
+        q=Counter(SLUGS[q["domain"]] for q in content["questions"]),
+        cards=Counter(SLUGS[f["domain"]] for f in content["flashcards"]),
+    )
 
 
 @pytest.fixture

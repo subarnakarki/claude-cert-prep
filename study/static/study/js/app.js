@@ -54,6 +54,7 @@
         .then((data) => {
           data.byId = new Map(data.questions.map((q) => [q.id, q]));
           data.domainBySlug = new Map(data.domains.map((d) => [d.slug, d]));
+          data.scenarioByNumber = new Map(data.scenarios.map((s) => [s.number, s]));
           return data;
         });
     return contentPromise;
@@ -108,8 +109,10 @@
     return items;
   }
 
-  function selectPool(data, state, domain, mode) {
-    let questions = data.questions.filter((q) => !domain || q.domain === domain);
+  function selectPool(data, state, domain, mode, scenario = null) {
+    let questions = data.questions.filter(
+      (q) => (!domain || q.domain === domain) && (!scenario || q.scenario === scenario),
+    );
     if (mode === "missed") questions = questions.filter((q) => state.latest[q.id] === false);
     if (mode === "unanswered") questions = questions.filter((q) => !(q.id in state.latest));
     return questions.map((q) => q.id);
@@ -118,14 +121,14 @@
   function emptyPoolMessage(mode) {
     if (mode === "missed") return "Nothing to retry: you haven't missed any questions here yet.";
     if (mode === "unanswered") return "You've answered every question here. Try all questions or only misses.";
-    return "There are no questions for that domain yet.";
+    return "No questions match that domain and scenario.";
   }
 
-  function startRun(data, state, ids, domain, mode) {
+  function startRun(data, state, ids, domain, mode, scenario = null) {
     const order = shuffle(ids.slice());
     const choiceOrder = {};
     for (const id of order) choiceOrder[id] = shuffle(data.byId.get(id).choices.map((c) => c.id));
-    state.run = { question_ids: order, choice_order: choiceOrder, domain, mode, pos: 0, answers: {} };
+    state.run = { question_ids: order, choice_order: choiceOrder, domain, mode, scenario, pos: 0, answers: {} };
     state.runs += 1;
     save(state);
     const url = BASE + "practice/run/";
@@ -217,6 +220,8 @@
     const params = new URLSearchParams(location.search);
     if (data.domainBySlug.has(params.get("domain"))) form.elements.domain.value = params.get("domain");
     if (params.get("mode") in MODES) form.elements.mode.value = params.get("mode");
+    const scenarioParam = Number(params.get("scenario"));
+    if (data.scenarioByNumber.has(scenarioParam)) form.elements.scenario.value = String(scenarioParam);
 
     const run = state.run;
     const resume = form.querySelector("[data-resume]");
@@ -229,14 +234,15 @@
       event.preventDefault();
       const domain = form.elements.domain.value;
       const mode = form.elements.mode.value || "all";
-      const ids = selectPool(data, state, domain, mode);
+      const scenario = Number(form.elements.scenario.value) || null;
+      const ids = selectPool(data, state, domain, mode, scenario);
       const error = form.querySelector("[data-setup-error]");
       if (!ids.length) {
         error.textContent = emptyPoolMessage(mode);
         error.hidden = false;
         return;
       }
-      startRun(data, state, ids, domain, mode);
+      startRun(data, state, ids, domain, mode, scenario);
     });
   }
 
@@ -282,10 +288,17 @@
     function renderAside(run) {
       const { answered, correct } = stats(run);
       const domain = data.domainBySlug.get(run.domain);
+      const scenario = data.scenarioByNumber.get(run.scenario);
       aside.innerHTML =
         `<h2>This session</h2><dl><dt>Answered</dt><dd>${answered} of ${run.question_ids.length}</dd>` +
         `<dt>Correct</dt><dd>${correct}</dd><dt>Domains</dt><dd>${domain ? domain.short_name : "All"}</dd>` +
+        (scenario ? `<dt>Scenario</dt><dd>${scenario.title}</dd>` : "") +
         `<dt>Mode</dt><dd>${MODES[run.mode] || MODES.all}</dd></dl>`;
+    }
+
+    function roleLabel(question, n) {
+      const scenario = data.scenarioByNumber.get(question.scenario);
+      return scenario ? `<span>scenario: ${scenario.title.toLowerCase()}</span>` : `<span>question ${n}</span>`;
     }
 
     function marks(run) {
@@ -334,7 +347,7 @@
         `<div class="prog" aria-label="Question ${n} of ${total}, ${correct} correct so far">` +
         `<span class="marks" aria-hidden="true">${marks(run)}</span>` +
         `<span class="count" aria-hidden="true">${n}/${total}</span></div>` +
-        `<div class="msg"><div class="role"><span>question ${n}</span>` +
+        `<div class="msg"><div class="role">${roleLabel(question, n)}` +
         `<span class="p">domain: ${question.domain}</span></div>` +
         `<p class="qp" id="prompt">${question.prompt}</p></div>` +
         `<form id="answer">` +
@@ -447,7 +460,7 @@
       if (retry) {
         retry.addEventListener("click", () => {
           const fresh = current();
-          startRun(data, fresh, missed, run.domain, "missed");
+          startRun(data, fresh, missed, run.domain, "missed", run.scenario || null);
         });
       }
     }

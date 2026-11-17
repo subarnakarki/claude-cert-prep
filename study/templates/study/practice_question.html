@@ -5,7 +5,7 @@
 <div class="prog" aria-label="Question {{ run.pos|add:1 }} of {{ run.total }}, {{ run.correct_count }} correct so far"><span class="marks" aria-hidden="true">{% for mark in run.marks %}{% if mark == "ok" %}<span class="mk-ok">●</span>{% elif mark == "err" %}<span class="er">●</span>{% elif mark == "cur" %}<span class="p">◉</span>{% else %}○{% endif %}{% endfor %}</span><span class="count" aria-hidden="true">{{ run.pos|add:1 }}/{{ run.total }}</span></div>
 
 <div class="msg">
-  <div class="role"><span>question {{ run.pos|add:1 }}</span><span class="p">domain: {{ question.domain.slug }}</span></div>
+  <div class="role">{% if question.scenario %}<span>scenario: {{ question.scenario.title|lower }}</span>{% else %}<span>question {{ run.pos|add:1 }}</span>{% endif %}<span class="p">domain: {{ question.domain.slug }}</span></div>
   <p class="qp" id="prompt">{{ question.prompt|codeify }}</p>
 </div>
 
@@ -54,6 +54,7 @@
   <dt>Answered</dt><dd>{{ run.answered_count }} of {{ run.total }}</dd>
   <dt>Correct</dt><dd>{{ run.correct_count }}</dd>
   <dt>Domains</dt><dd>{% if domain %}{{ domain.short_name }}{% else %}All{% endif %}</dd>
+  {% if scenario %}<dt>Scenario</dt><dd>{{ scenario.title }}</dd>{% endif %}
   <dt>Mode</dt><dd>{% if run.mode == "missed" %}Missed only{% elif run.mode == "unanswered" %}Unanswered only{% else %}All questions{% endif %}</dd>
 </dl>
 {% endblock %}

@@ -32,19 +32,19 @@ def start_with(client, question: Question):
 # -- setup -----------------------------------------------------------------------------
 
 
-def test_start_redirects_to_first_question(client):
+def test_start_redirects_to_first_question(client, expected):
     response = start_practice(client)
     assert response.status_code == 302
     assert response.url == "/practice/question/"
     run = client.session["practice"]
-    assert len(run["question_ids"]) == 63
+    assert len(run["question_ids"]) == expected.questions
     assert client.get("/practice/question/").status_code == 200
 
 
-def test_domain_filter_restricts_pool(client, domains):
+def test_domain_filter_restricts_pool(client, domains, expected):
     start_practice(client, "tools_mcp")
     run = client.session["practice"]
-    assert len(run["question_ids"]) == 11
+    assert len(run["question_ids"]) == expected.q["tools_mcp"]
     assert set(
         Question.objects.filter(pk__in=run["question_ids"]).values_list("domain__slug", flat=True)
     ) == {"tools_mcp"}
@@ -55,10 +55,10 @@ def test_invalid_setup_is_rejected(client):
     assert start_practice(client, "", "sometimes").status_code == 400
 
 
-def test_quick_start_from_overview(client):
+def test_quick_start_from_overview(client, expected):
     response = client.post("/practice/start/claude_code/")
     assert response.status_code == 302
-    assert len(client.session["practice"]["question_ids"]) == 14
+    assert len(client.session["practice"]["question_ids"]) == expected.q["claude_code"]
     assert client.post("/practice/start/nope/").status_code == 404
     assert client.get("/practice/start/agentic/").status_code == 405
 
@@ -195,7 +195,7 @@ def test_next_requires_an_answer_then_advances(client):
     assert client.session["practice"]["pos"] == 1
 
 
-def test_progress_line_marks(client):
+def test_progress_line_marks(client, expected):
     start_practice(client, "context")
     answer(client, correct_ids(current_question(client)))
     client.post("/practice/next/")
@@ -203,7 +203,7 @@ def test_progress_line_marks(client):
     client.post("/practice/next/")
     html = client.get("/practice/question/").content.decode()
     assert '<span class="mk-ok">●</span><span class="er">●</span><span class="p">◉</span>○' in html
-    assert "3/13" in html
+    assert f"3/{expected.q['context']}" in html
 
 
 def test_full_run_reaches_results_by_domain(client):
@@ -218,10 +218,10 @@ def test_full_run_reaches_results_by_domain(client):
     assert results.status_code == 200
     rows = results.context["domain_rows"]
     assert [r["domain"].slug for r in rows] == ["context"]
-    assert rows[0]["answered"] == 13
-    assert rows[0]["correct"] == 7
-    assert results.context["missed"] == 6
-    assert "Retry 6 missed" in results.content.decode()
+    assert rows[0]["answered"] == n
+    assert rows[0]["correct"] == (n + 1) // 2
+    assert results.context["missed"] == n // 2
+    assert f"Retry {n // 2} missed" in results.content.decode()
     # Finished runs send the question page to results
     assert client.get("/practice/question/").url == "/practice/results/"
 
@@ -274,14 +274,14 @@ def test_missed_mode(client, make_attempt, domains):
     assert sorted(client.session["practice"]["question_ids"]) == sorted([qs[0].pk, qs[2].pk])
 
 
-def test_unanswered_mode(client, make_attempt, domains):
+def test_unanswered_mode(client, make_attempt, domains, expected):
     start_practice(client, "context")
     key = session_key_of(client)
     qs = list(domains["context"].questions.all())
     make_attempt(key, qs[0], False)
     make_attempt(key, qs[1], True)
     start_practice(client, "context", "unanswered")
-    assert len(client.session["practice"]["question_ids"]) == 11
+    assert len(client.session["practice"]["question_ids"]) == expected.q["context"] - 2
     assert qs[0].pk not in client.session["practice"]["question_ids"]
 
 
@@ -340,3 +340,60 @@ def test_reset_post_deletes_only_this_session(client, make_attempt):
     assert list(Attempt.objects.values_list("session_key", flat=True)) == ["someone-else"]
     assert "practice" not in client.session
     assert "session <span data-runs>0</span>" in client.get("/").content.decode()
+
+
+# -- scenarios -------------------------------------------------------------------------
+
+
+def test_scenario_filter_restricts_pool(client):
+    client.post("/practice/start/", {"domain": "", "scenario": "6", "mode": "all"})
+    ids = client.session["practice"]["question_ids"]
+    assert ids
+    assert set(Question.objects.filter(pk__in=ids).values_list("scenario__number", flat=True)) == {
+        6
+    }
+    assert client.session["practice"]["scenario"] == 6
+
+
+def test_scenario_and_domain_filters_combine(client):
+    client.post("/practice/start/", {"domain": "context", "scenario": "1", "mode": "all"})
+    ids = client.session["practice"]["question_ids"]
+    expected = Question.objects.filter(domain__slug="context", scenario__number=1)
+    assert sorted(ids) == sorted(expected.values_list("pk", flat=True))
+
+
+def test_empty_scenario_and_domain_combination_shows_message(client):
+    # No claude_code questions are framed in the customer-support scenario.
+    assert not Question.objects.filter(domain__slug="claude_code", scenario__number=1).exists()
+    response = client.post(
+        "/practice/start/", {"domain": "claude_code", "scenario": "1", "mode": "all"}
+    )
+    assert response.status_code == 200
+    assert "No questions match" in response.content.decode()
+
+
+def test_unknown_scenario_is_rejected(client):
+    response = client.post("/practice/start/", {"domain": "", "scenario": "99", "mode": "all"})
+    assert response.status_code == 400
+
+
+def test_question_shows_its_scenario(client):
+    q = Question.objects.filter(scenario__number=1).first()
+    start_with(client, q)
+    html = client.get("/practice/question/").content.decode()
+    assert "scenario: customer support resolution agent" in html
+
+
+def test_retry_keeps_the_scenario(client):
+    client.post("/practice/start/", {"domain": "", "scenario": "3", "mode": "all"})
+    answer(client, wrong_ids(current_question(client)))
+    client.post("/practice/retry/")
+    assert client.session["practice"]["scenario"] == 3
+    assert client.session["practice"]["mode"] == "missed"
+
+
+def test_setup_preselects_scenario_from_link(client):
+    scenarios_html = client.get("/scenarios/").content.decode()
+    assert 'href="/practice/?scenario=1"' in scenarios_html
+    setup = client.get("/practice/?scenario=1")
+    assert setup.context["form"].initial["scenario"] == "1"

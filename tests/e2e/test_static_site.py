@@ -31,10 +31,10 @@ def wait_ready(page: Page) -> None:
     page.wait_for_selector("body[data-ready]")
 
 
-def test_static_practice_flow_updates_readiness(static_site, page: Page):
+def test_static_practice_flow_updates_readiness(static_site, page: Page, expected):
     page.goto(static_site)
     wait_ready(page)
-    expect(page.locator("#status")).to_contain_text("mastered 0/63")
+    expect(page.locator("#status")).to_contain_text(f"mastered 0/{expected.questions}")
     expect(page.locator("#status")).to_contain_text('"tool_use"')
 
     page.get_by_role("link", name="practice", exact=True).click()
@@ -44,15 +44,20 @@ def test_static_practice_flow_updates_readiness(static_site, page: Page):
     expect(page).to_have_url(re.compile(r"/claude-cert-prep/practice/run/$"))
     expect(page.get_by_text("domain: context")).to_be_visible()
 
-    # Pick exactly the correct choices, read from the page's own content.json.
-    correct = page.evaluate(
-        """async () => {
-            const data = await (await fetch(document.body.dataset.base + 'content.json')).json();
-            const run = JSON.parse(localStorage.getItem('ccarf-prep:v1')).run;
-            const q = data.questions.find(q => q.id === run.question_ids[0]);
-            return q.choices.filter(c => c.correct).map(c => String(c.id));
-        }"""
-    )
+    # Answer from the page's own content.json: the first question right, the second wrong.
+    def choice_ids(position: int, correct: bool) -> list[str]:
+        return page.evaluate(
+            """async ([position, correct]) => {
+                const url = document.body.dataset.base + 'content.json';
+                const data = await (await fetch(url)).json();
+                const run = JSON.parse(localStorage.getItem('ccarf-prep:v1')).run;
+                const q = data.questions.find(q => q.id === run.question_ids[position]);
+                return q.choices.filter(c => c.correct === correct).map(c => String(c.id));
+            }""",
+            [position, correct],
+        )
+
+    correct = choice_ids(0, True)
     for value in correct:
         page.locator(f'input[name=choice][value="{value}"]').check(force=True)
     page.get_by_role("button", name="Check answer").click()
@@ -60,10 +65,11 @@ def test_static_practice_flow_updates_readiness(static_site, page: Page):
     expect(page.locator(".opt.right")).to_have_count(len(correct))
 
     page.get_by_role("button", name="Next question").click()
-    expect(page.locator(".prog .count")).to_have_text("2/13")
-    page.locator("label.opt").first.click()
+    expect(page.locator(".prog .count")).to_have_text(f"2/{expected.q['context']}")
+    wrong = choice_ids(1, False)[0]
+    page.locator(f'input[name=choice][value="{wrong}"]').check(force=True)
     page.get_by_role("button", name="Check answer").click()
-    expect(page.locator(".result")).to_be_visible()
+    expect(page.locator(".result")).to_contain_text("✗ incorrect")
 
     page.get_by_role("link", name="End session").first.click()
     expect(page.get_by_role("heading", name="Session results")).to_be_visible()
@@ -71,7 +77,7 @@ def test_static_practice_flow_updates_readiness(static_site, page: Page):
 
     page.get_by_role("link", name="Back to overview").click()
     wait_ready(page)
-    expect(page.locator("#status")).to_contain_text("mastered 1/63")
+    expect(page.locator("#status")).to_contain_text(f"mastered 1/{expected.questions}")
     expect(page.locator("[data-runs]")).to_have_text("1")
 
 
@@ -90,9 +96,9 @@ def test_static_reset_clears_progress(static_site, page: Page):
     expect(page.locator("[data-runs]")).to_have_text("0")
 
 
-def test_static_flashcards_and_offline(static_site, page: Page, context):
+def test_static_flashcards_and_offline(static_site, page: Page, context, expected):
     page.goto(static_site + "flashcards/tools_mcp/")
-    expect(page.locator(".deck .pos")).to_contain_text("1/11")
+    expect(page.locator(".deck .pos")).to_contain_text(f"1/{expected.cards['tools_mcp']}")
     page.goto(static_site)
     wait_ready(page)
     page.evaluate("navigator.serviceWorker.ready")
@@ -102,3 +108,13 @@ def test_static_flashcards_and_offline(static_site, page: Page, context):
     page.goto(static_site + "rules/")
     expect(page.get_by_role("heading", name="Decision rules")).to_be_visible()
     context.set_offline(False)
+
+
+def test_static_scenario_drill(static_site, page: Page):
+    page.goto(static_site + "scenarios/")
+    page.locator('a[href$="practice/?scenario=6"]').click()
+    wait_ready(page)
+    expect(page.get_by_label("Scenario")).to_have_value("6")
+    page.get_by_role("button", name="ccarf practice").click()
+    expect(page.get_by_text("scenario: structured data extraction")).to_be_visible()
+    expect(page.locator("#run-aside")).to_contain_text("Structured Data Extraction")

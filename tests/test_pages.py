@@ -76,9 +76,9 @@ def test_domain_detail_renders_trusted_html(client):
     assert '<div class="code">1.1</div>' in html
 
 
-def test_flashcards_without_js_show_every_card(client):
+def test_flashcards_without_js_show_every_card(client, expected):
     html = client.get("/flashcards/").content.decode()
-    assert html.count('<li class="card">') == 53
+    assert html.count('<li class="card">') == expected.flashcards
     assert 'id="deck" hidden' in html
 
 

@@ -19,7 +19,7 @@ from django.conf import settings
 from django.test import Client, override_settings
 from django.urls import get_script_prefix, set_script_prefix
 
-from .models import Domain, Question
+from .models import Domain, Question, Scenario
 from .templatetags.study_tags import codeify
 
 STATIC_SOURCE = Path(__file__).resolve().parent / "static"
@@ -65,10 +65,12 @@ def content_payload() -> dict:
         }
         for d in Domain.objects.all()
     ]
+    scenarios = [{"number": s.number, "title": s.title} for s in Scenario.objects.all()]
     questions = [
         {
             "id": q.pk,
             "domain": q.domain.slug,
+            "scenario": q.scenario.number if q.scenario else None,
             "prompt": str(codeify(q.prompt)),
             "explanation": str(codeify(q.explanation)),
             "choices": [
@@ -76,9 +78,9 @@ def content_payload() -> dict:
                 for c in q.choices.all()
             ],
         }
-        for q in Question.objects.select_related("domain").prefetch_related("choices")
+        for q in Question.objects.select_related("domain", "scenario").prefetch_related("choices")
     ]
-    return {"domains": domains, "questions": questions}
+    return {"domains": domains, "scenarios": scenarios, "questions": questions}
 
 
 def build(out: Path, base_url: str = "/") -> list[str]:

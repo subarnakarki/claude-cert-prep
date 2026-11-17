@@ -8,7 +8,7 @@ the server checks them against the question and the stored shuffle.
 import random
 from dataclasses import asdict, dataclass, field
 
-from .models import Attempt, Domain, Question
+from .models import Attempt, Domain, Question, Scenario
 from .progress import latest_results
 
 SESSION_KEY = "practice"
@@ -32,6 +32,7 @@ class PracticeRun:
     choice_order: dict[str, list[int]]  # JSON object keys are strings
     domain: str = ""  # slug, "" for all domains
     mode: str = "all"
+    scenario: int | None = None  # scenario number, None for all scenarios
     pos: int = 0
     answers: dict[str, dict] = field(default_factory=dict)
 
@@ -107,12 +108,19 @@ class PracticeRun:
         return LETTERS[ids.index(choice_id)]
 
 
-def select_pool(session_key: str | None, domain: Domain | None, mode: str) -> list[int]:
+def select_pool(
+    session_key: str | None,
+    domain: Domain | None,
+    mode: str,
+    scenario: Scenario | None = None,
+) -> list[int]:
     if mode not in MODES:
         raise ValueError(f"unknown mode {mode!r}")
     qs = Question.objects.all()
     if domain is not None:
         qs = qs.filter(domain=domain)
+    if scenario is not None:
+        qs = qs.filter(scenario=scenario)
     ids = list(qs.values_list("pk", flat=True))
     if mode == "all":
         return ids
@@ -127,6 +135,7 @@ def build_run(
     *,
     domain: str = "",
     mode: str = "all",
+    scenario: int | None = None,
     rng: random.Random | None = None,
 ) -> PracticeRun:
     """Shuffle the questions and each question's choices once, up front."""
@@ -138,7 +147,9 @@ def build_run(
         choice_ids = [c.id for c in question.choices.all()]
         rng.shuffle(choice_ids)
         choice_order[str(question.id)] = choice_ids
-    return PracticeRun(question_ids=ids, choice_order=choice_order, domain=domain, mode=mode)
+    return PracticeRun(
+        question_ids=ids, choice_order=choice_order, domain=domain, mode=mode, scenario=scenario
+    )
 
 
 def start_run(session, run: PracticeRun) -> None:

@@ -84,6 +84,14 @@ class Flashcard(models.Model):
 
 class Question(models.Model):
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE, related_name="questions")
+    scenario = models.ForeignKey(
+        Scenario,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="questions",
+        help_text="The exam scenario this question is framed in, if any",
+    )
     prompt = models.TextField()
     explanation = models.TextField()
     order = models.PositiveSmallIntegerField(unique=True)

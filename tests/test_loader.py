@@ -56,7 +56,7 @@ def test_edits_update_in_place(reload_content, content, make_attempt):
     assert Attempt.objects.filter(question=question).count() == 1
 
 
-def test_removed_items_are_pruned(reload_content, content):
+def test_removed_items_are_pruned(reload_content, content, expected):
     data = copy.deepcopy(content)
     data["rules"].pop()
     data["flashcards"].pop()
@@ -64,7 +64,7 @@ def test_removed_items_are_pruned(reload_content, content):
     data["domains"][0]["tasks"].pop()
     reload_content(data)
     assert DecisionRule.objects.count() == 35
-    assert Flashcard.objects.count() == 52
+    assert Flashcard.objects.count() == expected.flashcards - 1
     assert TaskStatement.objects.count() == 29
     assert Question.objects.get(order=0).choices.count() == 3
 
@@ -79,12 +79,12 @@ def test_removed_question_takes_its_attempts(reload_content, content, make_attem
     assert not Attempt.objects.exists()
 
 
-def test_management_command_reports_counts(make_attempt):
+def test_management_command_reports_counts(make_attempt, expected):
     make_attempt("abc", Question.objects.first(), True)
     out = StringIO()
     call_command("load_content", stdout=out)
     call_command("load_content", stdout=out)
     assert "5 domains" in out.getvalue()
-    assert "63 questions" in out.getvalue()
+    assert f"{expected.questions} questions" in out.getvalue()
     assert Attempt.objects.count() == 1
-    assert Question.objects.count() == 63
+    assert Question.objects.count() == expected.questions

@@ -28,8 +28,45 @@ def test_json_counts(content):
     assert sum(len(d["tasks"]) for d in content["domains"]) == 30
     assert len(content["rules"]) == 36
     assert len(content["scenarios"]) == 6
-    assert len(content["flashcards"]) == 53
-    assert len(content["questions"]) == 63
+    # Floors, so content can grow but an accidental truncation fails loudly.
+    assert len(content["flashcards"]) >= 90
+    assert len(content["questions"]) >= 120
+
+
+def test_every_domain_has_questions_and_cards(expected):
+    for slug in SLUGS.values():
+        assert expected.q[slug] >= 20, slug
+        assert expected.cards[slug] >= 10, slug
+
+
+def test_scenario_tags_are_valid(content):
+    numbers = {s["number"] for s in content["scenarios"]}
+    for q in content["questions"]:
+        assert q.get("scenario") is None or q["scenario"] in numbers, q["prompt"]
+
+
+def test_every_scenario_can_be_drilled(content):
+    for s in content["scenarios"]:
+        tagged = [q for q in content["questions"] if q.get("scenario") == s["number"]]
+        assert len(tagged) >= 10, s["title"]
+
+
+def longest_is_correct_ratio(questions) -> float:
+    single = [q for q in questions if sum(c["is_correct"] for c in q["choices"]) == 1]
+    hits = sum(max(q["choices"], key=lambda c: len(c["text"]))["is_correct"] for q in single)
+    return hits / len(single)
+
+
+def test_answer_length_is_not_a_giveaway(content):
+    """The correct choice shouldn't stand out as the longest one.
+
+    This is a ratchet: the original 63 questions often have the longest choice as the
+    answer, while questions from order 63 on are balanced. New content must not make it
+    worse; lower the bound as the older questions are rebalanced.
+    """
+    new = [q for q in content["questions"] if q["order"] >= 63]
+    assert longest_is_correct_ratio(new) < 0.3
+    assert longest_is_correct_ratio(content["questions"]) <= 0.52
 
 
 def test_question_orders_are_unique(content):
@@ -68,13 +105,14 @@ def test_choice_texts_are_unique_within_a_question(content):
 
 
 @pytest.mark.django_db
-def test_migration_loaded_everything():
+def test_migration_loaded_everything(expected):
     assert Domain.objects.count() == 5
     assert TaskStatement.objects.count() == 30
     assert DecisionRule.objects.count() == 36
     assert Scenario.objects.count() == 6
-    assert Flashcard.objects.count() == 53
-    assert Question.objects.count() == 63
+    assert Flashcard.objects.count() == expected.flashcards
+    assert Question.objects.count() == expected.questions
+    assert Question.objects.filter(scenario__isnull=False).exists()
     assert sum(Domain.objects.values_list("weight", flat=True)) == 100
 
 
@@ -98,7 +136,7 @@ def test_scenarios_link_domains():
 
 
 @pytest.mark.django_db
-def test_seven_multi_select_questions():
+def test_multi_select_questions_match_content(expected):
     multi = [q for q in Question.objects.prefetch_related("choices") if q.is_multi]
-    assert len(multi) == 7
-    assert Choice.objects.filter(question__in=multi).count() == 35
+    assert len(multi) == expected.multi
+    assert Choice.objects.filter(question__in=multi).count() == expected.multi_choices

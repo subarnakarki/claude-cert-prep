@@ -743,6 +743,211 @@
    "domain": 5,
    "front": "Conflicting statistics in synthesis",
    "back_html": "Report both with source attribution and dates, and separate established from contested findings."
+  },
+  {
+   "domain": 1,
+   "front": "Model-driven vs pre-configured sequence",
+   "back_html": "<b>Model-driven</b>: the model picks the next tool. <b>Pre-configured</b>: your code fixes the order. When the order must be guaranteed, use code."
+  },
+  {
+   "domain": 1,
+   "front": "A rule with financial, identity or compliance stakes",
+   "back_html": "Enforce it in code with a <b>prerequisite or hook</b>, not in the prompt. Prompts always have some failure rate."
+  },
+  {
+   "domain": 1,
+   "front": "One message, two unrelated requests",
+   "back_html": "Split the concerns, investigate them in parallel with separate data, then reply with one combined answer."
+  },
+  {
+   "domain": 1,
+   "front": "Report misses whole subtopics, every subagent did its job",
+   "back_html": "The <b>coordinator's decomposition</b> was too narrow. Fix the assignments."
+  },
+  {
+   "domain": 1,
+   "front": "Refinement loop for a research synthesis",
+   "back_html": "Check the synthesis for gaps → re-delegate the missing parts → re-synthesize."
+  },
+  {
+   "domain": 1,
+   "front": "How do subagents share findings?",
+   "back_html": "Through the <b>coordinator</b> (hub-and-spoke). Subagents never talk to each other directly."
+  },
+  {
+   "domain": 1,
+   "front": "Passing findings to a synthesis subagent",
+   "back_html": "Explicitly, in the prompt, as structured findings that keep <b>content separate from metadata</b> (URL, document, page)."
+  },
+  {
+   "domain": 1,
+   "front": "An interception hook blocks a refund. Then what?",
+   "back_html": "Redirect to <b>human escalation</b> with the case details. Never hide the block or allow a workaround."
+  },
+  {
+   "domain": 1,
+   "front": "Reviewing a large multi-file PR",
+   "back_html": "Per-file passes plus a <b>cross-file integration pass</b>."
+  },
+  {
+   "domain": 1,
+   "front": "Earlier tool results are stale",
+   "back_html": "Start a <b>fresh session with an injected summary</b> instead of resuming."
+  },
+  {
+   "domain": 2,
+   "front": "What a good tool description includes",
+   "back_html": "Input formats, example queries, edge cases, and how the tool differs from similar tools."
+  },
+  {
+   "domain": 2,
+   "front": "Good descriptions, wrong tool still chosen",
+   "back_html": "Check the <b>system prompt</b> for keyword-heavy wording that overrides the descriptions."
+  },
+  {
+   "domain": 2,
+   "front": "One generic tool doing several jobs",
+   "back_html": "Split or rename it into purpose-specific tools, e.g. <code>analyze_document</code> → <code>extract_tables</code>, <code>check_compliance</code>."
+  },
+  {
+   "domain": 2,
+   "front": "Fields in a structured MCP error",
+   "back_html": "<code>isError</code>, <code>errorCategory</code> (transient · validation · business · permission), <code>isRetryable</code>, and a readable description."
+  },
+  {
+   "domain": 2,
+   "front": "A subagent hits a transient failure",
+   "back_html": "Retry locally. Escalate only what it can't resolve, with what it tried and any partial results."
+  },
+  {
+   "domain": 2,
+   "front": "fetch_url vs load_document",
+   "back_html": "Prefer constrained tools: <code>load_document</code> keeps an agent inside its role, while <code>fetch_url</code> opens up anything."
+  },
+  {
+   "domain": 2,
+   "front": "Several MCP servers connected",
+   "back_html": "Tools from <b>all</b> connected servers are available at once, so descriptions must be distinct."
+  },
+  {
+   "domain": 2,
+   "front": "Exploring an unfamiliar codebase",
+   "back_html": "Grep for entry points → Read to follow imports → trace exported names across modules."
+  },
+  {
+   "domain": 3,
+   "front": "Keeping a large CLAUDE.md maintainable",
+   "back_html": "Use <code>@import</code> for modular files and <code>.claude/rules/</code> for topic files (e.g. <code>testing.md</code>)."
+  },
+  {
+   "domain": 3,
+   "front": "Where command definitions do NOT go",
+   "back_html": "Not in CLAUDE.md, and there is no <code>config.json</code> \"commands\" array. Use <code>.claude/commands/</code>."
+  },
+  {
+   "domain": 3,
+   "front": "context: fork",
+   "back_html": "Runs the skill as an <b>isolated sub-agent</b>, so its output stays out of the main conversation."
+  },
+  {
+   "domain": 3,
+   "front": "argument-hint",
+   "back_html": "SKILL.md frontmatter that <b>prompts for parameters</b> when the skill runs."
+  },
+  {
+   "domain": 3,
+   "front": "allowed-tools",
+   "back_html": "SKILL.md frontmatter that <b>restricts the tools</b> the skill can use, e.g. read-only."
+  },
+  {
+   "domain": 3,
+   "front": "The Explore subagent",
+   "back_html": "Keeps verbose discovery out of the main context. Common pattern: explore, plan, then execute."
+  },
+  {
+   "domain": 3,
+   "front": "Implementation keeps missing edge cases",
+   "back_html": "Write tests first, then iterate on the failures."
+  },
+  {
+   "domain": 3,
+   "front": "CI-generated tests duplicate existing ones",
+   "back_html": "Give it the existing tests, and document testing standards and fixtures in CLAUDE.md."
+  },
+  {
+   "domain": 4,
+   "front": "Making severity labels consistent",
+   "back_html": "Define each severity level with <b>concrete code examples</b>."
+  },
+  {
+   "domain": 4,
+   "front": "A checkable criterion for outdated comments",
+   "back_html": "\"Flag a comment only when it <b>contradicts the code</b>.\""
+  },
+  {
+   "domain": 4,
+   "front": "What few-shot examples should show about output",
+   "back_html": "The format: <b>location, issue, severity, fix</b>."
+  },
+  {
+   "domain": 4,
+   "front": "Empty extractions on unusual layouts",
+   "back_html": "Few-shot examples that cover <b>varied document structures</b>."
+  },
+  {
+   "domain": 4,
+   "front": "Strict schema, inconsistent formats",
+   "back_html": "Pair the schema with <b>format normalization rules</b> (e.g. ISO 8601 dates)."
+  },
+  {
+   "domain": 4,
+   "front": "When to set conflict_detected",
+   "back_html": "When the source contradicts itself (two totals, two dates). Flag it for review instead of picking one."
+  },
+  {
+   "domain": 4,
+   "front": "What the Batch API can't do",
+   "back_html": "Multi-turn tool calling within a request, and anything that needs a latency SLA."
+  },
+  {
+   "domain": 4,
+   "front": "Before a large batch run",
+   "back_html": "Tune the prompt on a <b>sample</b> first."
+  },
+  {
+   "domain": 4,
+   "front": "Batch cadence vs an SLA",
+   "back_html": "Submission window + 24 h ≤ SLA. Example: 4-hour windows meet a 30-hour SLA."
+  },
+  {
+   "domain": 5,
+   "front": "Two issues in one support chat",
+   "back_html": "Keep each issue's data in its own block so details don't cross over."
+  },
+  {
+   "domain": 5,
+   "front": "Tool returns 40+ fields, 5 matter",
+   "back_html": "Trim the output to what matters before it enters the context."
+  },
+  {
+   "domain": 5,
+   "front": "No meaningful progress is possible",
+   "back_html": "<b>Escalate</b>. Don't guess at records or loop forever."
+  },
+  {
+   "domain": 5,
+   "front": "Some sources were unreachable",
+   "back_html": "Say so: the synthesis should <b>note its coverage gaps</b>."
+  },
+  {
+   "domain": 5,
+   "front": "Setting confidence thresholds",
+   "back_html": "Use field-level confidence and <b>calibrate against a labeled validation set</b>."
+  },
+  {
+   "domain": 5,
+   "front": "Formatting a mixed research report",
+   "back_html": "Tables for financials, prose for news, lists for technical findings. Separate established findings from contested ones."
   }
  ],
  "questions": [
@@ -768,7 +973,8 @@
      "text": "Replace the phrase match with a regex that looks for several completion phrases",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 1
   },
   {
    "domain": 1,
@@ -792,7 +998,8 @@
      "text": "Ask the model to return a JSON flag {\"done\":true} in its text and stop on that",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 1
   },
   {
    "domain": 1,
@@ -816,7 +1023,8 @@
      "text": "The subagent needs fork_session to read the parent's context",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 3
   },
   {
    "domain": 1,
@@ -840,7 +1048,8 @@
      "text": "Whether tool_choice is set to \"any\"",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 3
   },
   {
    "domain": 1,
@@ -864,7 +1073,8 @@
      "text": "Lower each subagent's max_tokens so they finish faster",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 3
   },
   {
    "domain": 1,
@@ -888,7 +1098,8 @@
      "text": "Ask the model to report its confidence before each refund and block when it's low",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 1
   },
   {
    "domain": 1,
@@ -912,7 +1123,8 @@
      "text": "Few-shot examples of correct date comparisons",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 1
   },
   {
    "domain": 1,
@@ -936,7 +1148,8 @@
      "text": "Batch every file through the Message Batches API overnight",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 4
   },
   {
    "domain": 1,
@@ -960,7 +1173,8 @@
      "text": "Fork the session and delete the old one",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 2
   },
   {
    "domain": 1,
@@ -984,7 +1198,8 @@
      "text": "/compact between the two attempts",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 2
   },
   {
    "domain": 1,
@@ -1012,7 +1227,8 @@
      "text": "A link to the raw tool logs only",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 1
   },
   {
    "domain": 1,
@@ -1036,7 +1252,8 @@
      "text": "Set tool_choice to force a subagent at every step",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 3
   },
   {
    "domain": 2,
@@ -1060,7 +1277,8 @@
      "text": "Add 20 few-shot examples of correct tool picks to the system prompt",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 1
   },
   {
    "domain": 2,
@@ -1084,7 +1302,8 @@
      "text": "Log the errors server-side and return an empty result",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": null
   },
   {
    "domain": 2,
@@ -1108,7 +1327,8 @@
      "text": "Switch to a larger model",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 3
   },
   {
    "domain": 2,
@@ -1132,7 +1352,8 @@
      "text": "Put extract_metadata first in the tools array",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 6
   },
   {
    "domain": 2,
@@ -1156,7 +1377,8 @@
      "text": "Put the server config inside CLAUDE.md",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 4
   },
   {
    "domain": 2,
@@ -1180,7 +1402,8 @@
      "text": "Move the MCP server to user scope",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 4
   },
   {
    "domain": 2,
@@ -1204,7 +1427,8 @@
      "text": "Use a community server for the internal system too",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 4
   },
   {
    "domain": 2,
@@ -1228,7 +1452,8 @@
      "text": "Retry every empty result three times",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 3
   },
   {
    "domain": 2,
@@ -1252,7 +1477,8 @@
      "text": "Bash ls, then Read every file",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 4
   },
   {
    "domain": 2,
@@ -1280,7 +1506,8 @@
      "text": "Switch tool_choice to \"any\"",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 4
   },
   {
    "domain": 2,
@@ -1304,7 +1531,8 @@
      "text": "Using the Batch API",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 4
   },
   {
    "domain": 3,
@@ -1328,7 +1556,8 @@
      "text": "A team slash command",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 2
   },
   {
    "domain": 3,
@@ -1352,7 +1581,8 @@
      "text": "Put the conventions in a slash command",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 2
   },
   {
    "domain": 3,
@@ -1376,7 +1606,8 @@
      "text": "Put a CLAUDE.md in every Terraform subdirectory",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 2
   },
   {
    "domain": 3,
@@ -1400,7 +1631,8 @@
      "text": "One sentence in the root CLAUDE.md asking Claude to infer the conventions",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 2
   },
   {
    "domain": 3,
@@ -1424,7 +1656,8 @@
      "text": "The repo's .claude/commands/security-review.md",
      "is_correct": true
     }
-   ]
+   ],
+   "scenario": 2
   },
   {
    "domain": 3,
@@ -1452,7 +1685,8 @@
      "text": "paths: [\"**/*\"]",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 2
   },
   {
    "domain": 3,
@@ -1476,7 +1710,8 @@
      "text": "Copy it to .claude/skills/ under the same name",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 2
   },
   {
    "domain": 3,
@@ -1500,7 +1735,8 @@
      "text": "A batch job",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 2
   },
   {
    "domain": 3,
@@ -1524,7 +1760,8 @@
      "text": "Split it into 60 separate single-file prompts",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 2
   },
   {
    "domain": 3,
@@ -1548,7 +1785,8 @@
      "text": "Switch to plan mode",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 2
   },
   {
    "domain": 3,
@@ -1572,7 +1810,8 @@
      "text": "Add --batch",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 5
   },
   {
    "domain": 3,
@@ -1596,7 +1835,8 @@
      "text": "Run the review inside the developer's coding session",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 5
   },
   {
    "domain": 3,
@@ -1620,7 +1860,8 @@
      "text": "Lower the model temperature",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 5
   },
   {
    "domain": 3,
@@ -1644,7 +1885,8 @@
      "text": "Add \"you are an expert reviewer\" to the prompt",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 5
   },
   {
    "domain": 4,
@@ -1668,7 +1910,8 @@
      "text": "Ask the model to self-rate importance from 1 to 10 and drop anything under 7",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 5
   },
   {
    "domain": 4,
@@ -1692,7 +1935,8 @@
      "text": "Post outdated-comment findings only on Fridays",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 5
   },
   {
    "domain": 4,
@@ -1716,7 +1960,8 @@
      "text": "Examples of only real bugs, never acceptable patterns",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 5
   },
   {
    "domain": 4,
@@ -1740,7 +1985,8 @@
      "text": "Raise max_tokens",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 6
   },
   {
    "domain": 4,
@@ -1764,7 +2010,8 @@
      "text": "Make the field required",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 6
   },
   {
    "domain": 4,
@@ -1788,7 +2035,8 @@
      "text": "Raise temperature to explore more answers",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 6
   },
   {
    "domain": 4,
@@ -1812,7 +2060,8 @@
      "text": "Amounts returned as strings instead of numbers",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 6
   },
   {
    "domain": 4,
@@ -1840,7 +2089,8 @@
      "text": "Live chat support",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": null
   },
   {
    "domain": 4,
@@ -1864,7 +2114,8 @@
      "text": "Submit every 4 hours",
      "is_correct": true
     }
-   ]
+   ],
+   "scenario": 6
   },
   {
    "domain": 4,
@@ -1888,7 +2139,8 @@
      "text": "Process the failures with the same oversized requests in real time",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 6
   },
   {
    "domain": 4,
@@ -1912,7 +2164,8 @@
      "text": "No tools, just ask for JSON in text",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 6
   },
   {
    "domain": 4,
@@ -1936,7 +2189,8 @@
      "text": "A different model's output for comparison",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 6
   },
   {
    "domain": 4,
@@ -1964,7 +2218,8 @@
      "text": "A sentiment score of the code comments",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 5
   },
   {
    "domain": 5,
@@ -1988,7 +2243,8 @@
      "text": "Ask the customer to repeat the details",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 1
   },
   {
    "domain": 5,
@@ -2016,7 +2272,8 @@
      "text": "Remove all metadata",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 3
   },
   {
    "domain": 5,
@@ -2040,7 +2297,8 @@
      "text": "Ask them to rate their frustration from 1 to 10",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 1
   },
   {
    "domain": 5,
@@ -2064,7 +2322,8 @@
      "text": "Close the conversation",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 1
   },
   {
    "domain": 5,
@@ -2088,7 +2347,8 @@
      "text": "Ask the model's confidence and approve it if over 80%",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 1
   },
   {
    "domain": 5,
@@ -2112,7 +2372,8 @@
      "text": "Process the request on all three accounts",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 1
   },
   {
    "domain": 5,
@@ -2136,7 +2397,8 @@
      "text": "Escalate based on customer sentiment",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 1
   },
   {
    "domain": 5,
@@ -2160,7 +2422,8 @@
      "text": "Nothing. The coordinator should kill the workflow",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 3
   },
   {
    "domain": 5,
@@ -2188,7 +2451,8 @@
      "text": "Raise temperature",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 2
   },
   {
    "domain": 5,
@@ -2212,7 +2476,8 @@
      "text": "Use --resume without saving anything",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 3
   },
   {
    "domain": 5,
@@ -2236,7 +2501,8 @@
      "text": "Wait for complaints",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 6
   },
   {
    "domain": 5,
@@ -2260,7 +2526,8 @@
      "text": "Drop both",
      "is_correct": false
     }
-   ]
+   ],
+   "scenario": 3
   },
   {
    "domain": 5,
@@ -2282,6 +2549,1531 @@
     },
     {
      "text": "Have the coordinator guess sources afterward",
+     "is_correct": false
+    }
+   ],
+   "scenario": 3
+  },
+  {
+   "domain": 1,
+   "scenario": 1,
+   "prompt": "The support agent sometimes calls process_refund before get_customer has verified the caller's identity. The system prompt already says \"always verify identity first.\" What is the most reliable fix?",
+   "explanation": "Identity verification is a compliance requirement, so it belongs in code. Prompt changes lower the failure rate but can't guarantee ordering. A programmatic prerequisite does.",
+   "order": 63,
+   "choices": [
+    {
+     "text": "A prerequisite gate that blocks process_refund and lookup_order until get_customer returns a verified ID",
+     "is_correct": true
+    },
+    {
+     "text": "Move the verification instruction to the top of the system prompt and repeat it at the end",
+     "is_correct": false
+    },
+    {
+     "text": "Add few-shot examples that show verification happening before every refund",
+     "is_correct": false
+    },
+    {
+     "text": "Ask the model to state whether identity is verified before each tool call",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 1,
+   "prompt": "A customer writes: \"I need to change my shipping address, and my last invoice charged me twice.\" How should the agent handle this message?",
+   "explanation": "Split multi-concern requests, investigate the parts in parallel, then synthesize one answer. Keep each issue's data separate so details from one don't leak into the other.",
+   "order": 64,
+   "choices": [
+    {
+     "text": "Treat it as two concerns: investigate both in parallel, keep their data separate, and reply once",
+     "is_correct": true
+    },
+    {
+     "text": "Handle only the first request and ask the customer to open a new chat for the second",
+     "is_correct": false
+    },
+    {
+     "text": "Escalate immediately, because messages with more than one issue are too complex",
+     "is_correct": false
+    },
+    {
+     "text": "Combine both issues into one lookup_order call, since a single call that covers everything saves a round trip",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 3,
+   "prompt": "Asked about \"the impact of AI on creative industries,\" the research system returns a thorough report that only covers visual art. Music, writing and film are missing. Each subagent did its assigned task well. What is the root cause?",
+   "explanation": "When every subagent did its job but the report still has gaps, the coordinator's decomposition was too narrow. Fix the assignments, not the subagents.",
+   "order": 65,
+   "choices": [
+    {
+     "text": "The coordinator's decomposition of the topic was too narrow",
+     "is_correct": true
+    },
+    {
+     "text": "The web search subagent's queries were too short",
+     "is_correct": false
+    },
+    {
+     "text": "The synthesis subagent dropped findings about the other industries while merging results",
+     "is_correct": false
+    },
+    {
+     "text": "The report subagent ran out of output tokens before reaching the remaining sections",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 3,
+   "prompt": "The synthesis draft covers four of the six subtopics the user asked about. What should the coordinator do next?",
+   "explanation": "Refine iteratively: check the synthesis for gaps, re-delegate targeted work for what's missing, then re-synthesize.",
+   "order": 66,
+   "choices": [
+    {
+     "text": "Check the draft for gaps, re-delegate research on the two missing subtopics, then re-synthesize",
+     "is_correct": true
+    },
+    {
+     "text": "Publish the report now, with a clear note at the top explaining that two requested subtopics may not be fully covered",
+     "is_correct": false
+    },
+    {
+     "text": "Ask the synthesis subagent to fill in the two missing subtopics from its own general knowledge so the report is complete",
+     "is_correct": false
+    },
+    {
+     "text": "Restart the whole pipeline from scratch with the same plan, in the hope that the second run covers everything",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 3,
+   "prompt": "The web search subagent finds a long PDF that the document-analysis subagent should read. How should that information reach the analysis subagent?",
+   "explanation": "In a hub-and-spoke design the coordinator owns routing and communication. Subagents don't talk to each other, so results flow back to the coordinator, which decides what to delegate next.",
+   "order": 67,
+   "choices": [
+    {
+     "text": "Back through the coordinator, which decides whether to delegate it to the analysis subagent",
+     "is_correct": true
+    },
+    {
+     "text": "The search subagent calls the analysis subagent directly with the PDF link",
+     "is_correct": false
+    },
+    {
+     "text": "Both subagents read and write a shared conversation history",
+     "is_correct": false
+    },
+    {
+     "text": "The analysis subagent regularly polls the search subagent's output folder for new documents",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 3,
+   "prompt": "When the coordinator hands findings to the synthesis subagent, which way of passing them works best?",
+   "explanation": "Subagents don't inherit the coordinator's history, so context must be passed explicitly. Structured findings that keep content separate from metadata (URL, document name, page) preserve attribution through synthesis.",
+   "order": 68,
+   "choices": [
+    {
+     "text": "In the prompt, as structured findings with content kept separate from source metadata",
+     "is_correct": true
+    },
+    {
+     "text": "As a one-line summary of the conclusions, to save tokens",
+     "is_correct": false
+    },
+    {
+     "text": "By telling the subagent to refer back to the coordinator's conversation",
+     "is_correct": false
+    },
+    {
+     "text": "As the full raw text of every fetched page, concatenated in the order the pages were retrieved",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 3,
+   "prompt": "You're defining the document-analysis subagent with an AgentDefinition. Which belong in it? (Select TWO.)",
+   "explanation": "An AgentDefinition holds a description, a system prompt and tool restrictions. Subagents don't get the coordinator's history and don't call each other.",
+   "order": 69,
+   "choices": [
+    {
+     "text": "A description of what the subagent is for",
+     "is_correct": true
+    },
+    {
+     "text": "Tool restrictions limiting it to the tools it needs",
+     "is_correct": true
+    },
+    {
+     "text": "A copy of the coordinator's full conversation history",
+     "is_correct": false
+    },
+    {
+     "text": "A list of other subagents it may call directly",
+     "is_correct": false
+    },
+    {
+     "text": "The coordinator's allowedTools list, including \"Task\"",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 1,
+   "prompt": "lookup_order returns order status as numeric codes (1, 2, 3, 7). The agent sometimes tells customers an order shipped when it was cancelled. What is the most reliable fix?",
+   "explanation": "A PostToolUse hook can normalize data deterministically before the model sees it. Explaining codes in the prompt still leaves room for misreading.",
+   "order": 70,
+   "choices": [
+    {
+     "text": "A PostToolUse hook that maps each status code to a readable status before the model sees it",
+     "is_correct": true
+    },
+    {
+     "text": "A table in the system prompt that explains what each status code means",
+     "is_correct": false
+    },
+    {
+     "text": "Ask the model to call lookup_order twice for every order and compare the two results before replying",
+     "is_correct": false
+    },
+    {
+     "text": "An interception hook that blocks lookup_order until a human confirms what the returned code means",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 1,
+   "prompt": "For refunds, the steps never change: verify identity, look up the order, check the refund policy, then refund or escalate. Leadership wants that order guaranteed. Which design fits?",
+   "explanation": "When the order is fixed and must be guaranteed, encode it in code as a pre-configured sequence with prerequisites, rather than leaving each step to the model's judgment.",
+   "order": 71,
+   "choices": [
+    {
+     "text": "Enforce the sequence in code, with prerequisites between the steps",
+     "is_correct": true
+    },
+    {
+     "text": "Let the model choose each step itself, and log every deviation from the expected order for a weekly review",
+     "is_correct": false
+    },
+    {
+     "text": "Describe the required order in the system prompt in bold capitals, and repeat it before each tool result",
+     "is_correct": false
+    },
+    {
+     "text": "Give the model all four tools at once and set tool_choice to \"auto\" so it can decide the best order",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 4,
+   "prompt": "An agent reviews a 40-file pull request in a single pass. It misses an interface change in one file that breaks callers in three other files. What is the better approach?",
+   "explanation": "Large reviews work best as per-file passes plus a separate cross-file integration pass that looks at how the changes interact.",
+   "order": 72,
+   "choices": [
+    {
+     "text": "Per-file review passes plus a separate cross-file integration pass",
+     "is_correct": true
+    },
+    {
+     "text": "One pass with a longer and more detailed review prompt",
+     "is_correct": false
+    },
+    {
+     "text": "Review only the files with the most changed lines",
+     "is_correct": false
+    },
+    {
+     "text": "Forty fully independent reviews, one per file, with no combined step afterwards",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 5,
+   "prompt": "Every pull request needs the same three checks: security, test coverage and documentation. Which decomposition fits this work?",
+   "explanation": "Fixed prompt chaining suits predictable, multi-aspect work where the steps are known in advance. Dynamic decomposition is for open-ended investigation.",
+   "order": 73,
+   "choices": [
+    {
+     "text": "Fixed prompt chaining, with one step per check",
+     "is_correct": true
+    },
+    {
+     "text": "Dynamic decomposition, letting the model plan a fresh set of steps for each pull request",
+     "is_correct": false
+    },
+    {
+     "text": "A single prompt that asks for the security, coverage and documentation checks all at once",
+     "is_correct": false
+    },
+    {
+     "text": "A coordinator that delegates to a dozen general-purpose subagents and merges their output",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 2,
+   "prompt": "You want to resume yesterday's analysis session, but overnight a large refactor renamed most of the modules you analyzed. What is the best move?",
+   "explanation": "When earlier tool results are stale, resuming carries outdated context forward. Start fresh and inject a short summary of the conclusions that still hold.",
+   "order": 74,
+   "choices": [
+    {
+     "text": "Start fresh and inject a short summary of the conclusions that still hold",
+     "is_correct": true
+    },
+    {
+     "text": "Resume the session and rely on the earlier tool results",
+     "is_correct": false
+    },
+    {
+     "text": "Resume the session, paste in the full list of renamed modules, and ask it to re-check them",
+     "is_correct": false
+    },
+    {
+     "text": "Use fork_session from yesterday's session and continue the analysis on the new branch",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 1,
+   "prompt": "After running a tool, a developer's loop sends the model only the latest tool result, without the earlier messages. The agent keeps losing track of the conversation. What is the fix?",
+   "explanation": "In the agentic loop, tool results are appended to the conversation history and the full history is sent on the next request.",
+   "order": 75,
+   "choices": [
+    {
+     "text": "Append each tool result to the history and send the full history on the next request",
+     "is_correct": true
+    },
+    {
+     "text": "Keep sending only the latest tool result, but make each result more detailed and self-contained",
+     "is_correct": false
+    },
+    {
+     "text": "Move all tool results into the system prompt, so the model sees them on every request",
+     "is_correct": false
+    },
+    {
+     "text": "Start a new conversation for each tool call, carrying over only the user's first message",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 1,
+   "prompt": "Which are anti-patterns for deciding that an agentic loop is finished? (Select TWO.)",
+   "explanation": "Loop control should come from stop_reason. Parsing phrases or treating any text as completion are anti-patterns. An iteration cap is fine as a safety net, just not as the main stop condition.",
+   "order": 76,
+   "choices": [
+    {
+     "text": "Treating any assistant text in the response as the completion signal",
+     "is_correct": true
+    },
+    {
+     "text": "Looking for phrases like \"I'm done\" in the model's reply",
+     "is_correct": true
+    },
+    {
+     "text": "Stopping when stop_reason is \"end_turn\"",
+     "is_correct": false
+    },
+    {
+     "text": "Continuing while stop_reason is \"tool_use\"",
+     "is_correct": false
+    },
+    {
+     "text": "Keeping an iteration cap as a safety net",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 3,
+   "prompt": "The coordinator needs three independent web searches and then one synthesis step that depends on all three. How should it issue the work?",
+   "explanation": "Independent work should run in parallel: emit the three Task calls in one coordinator response. The dependent synthesis waits for their results.",
+   "order": 77,
+   "choices": [
+    {
+     "text": "Emit the three search Task calls in one response, then run synthesis once they return",
+     "is_correct": true
+    },
+    {
+     "text": "Emit all four Task calls in one response, including the synthesis",
+     "is_correct": false
+    },
+    {
+     "text": "Run all four Task calls one after another",
+     "is_correct": false
+    },
+    {
+     "text": "Ask a single subagent to run all three searches and then write the synthesis itself",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 1,
+   "scenario": 1,
+   "prompt": "An interception hook blocks a $900 refund because it's over the $500 limit. What should happen next?",
+   "explanation": "Interception hooks block policy violations and redirect them to human escalation, with the case details. They shouldn't hide the block or allow a workaround.",
+   "order": 78,
+   "choices": [
+    {
+     "text": "Escalate the case to a human with the customer, order and amount",
+     "is_correct": true
+    },
+    {
+     "text": "Drop the call silently and let the agent tell the customer the refund has been processed",
+     "is_correct": false
+    },
+    {
+     "text": "Let the agent split it into two refunds of $450 each",
+     "is_correct": false
+    },
+    {
+     "text": "Lower the amount to $500 automatically and process it",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 2,
+   "scenario": 4,
+   "prompt": "A single analyze_document tool is used for summarizing, extracting tables and checking compliance, and the agent often uses it the wrong way. What should you do?",
+   "explanation": "Rename or split overlapping tools. Purpose-specific tools with distinct descriptions are much easier for the model to choose correctly.",
+   "order": 79,
+   "choices": [
+    {
+     "text": "Split it into purpose-specific tools, such as summarize_document and extract_tables",
+     "is_correct": true
+    },
+    {
+     "text": "Add a mode parameter to analyze_document and keep its current one-line description",
+     "is_correct": false
+    },
+    {
+     "text": "Add a line to the system prompt telling the model to be careful whenever it uses analyze_document",
+     "is_correct": false
+    },
+    {
+     "text": "Remove it entirely and let the agent read every document with the built-in Read tool instead",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 2,
+   "scenario": 1,
+   "prompt": "lookup_order and get_customer have detailed, distinct descriptions, yet the agent calls lookup_order on almost every message, even \"hi.\" The system prompt says: \"ORDER LOOKUP IS CRITICAL. ALWAYS LOOK UP ORDERS.\" What should you check first?",
+   "explanation": "Good descriptions can be overridden by keyword-heavy wording in the system prompt. When the descriptions are already good, check the system prompt.",
+   "order": 80,
+   "choices": [
+    {
+     "text": "Whether the keyword-heavy system prompt is overriding the tool descriptions",
+     "is_correct": true
+    },
+    {
+     "text": "Whether lookup_order needs an even longer description with more example queries and edge cases",
+     "is_correct": false
+    },
+    {
+     "text": "Whether the agent needs more tools to choose from, so lookup_order stops being the default",
+     "is_correct": false
+    },
+    {
+     "text": "Whether tool_choice should be set to force get_customer on every turn of the chat",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 2,
+   "scenario": 3,
+   "prompt": "The web search subagent hits a temporary rate-limit error from the search API. What should happen?",
+   "explanation": "Subagents retry transient failures locally and escalate only what they can't resolve, together with what they tried and any partial results.",
+   "order": 81,
+   "choices": [
+    {
+     "text": "Retry locally, and escalate only if it still fails, with what it tried and partial results",
+     "is_correct": true
+    },
+    {
+     "text": "The subagent returns an empty result list marked as success",
+     "is_correct": false
+    },
+    {
+     "text": "The coordinator aborts the whole research job",
+     "is_correct": false
+    },
+    {
+     "text": "Return \"Operation failed\" to the coordinator and stop all work on that query",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 2,
+   "scenario": 1,
+   "prompt": "process_refund rejects a request because the order is outside the 30-day refund window. How should the MCP tool report this?",
+   "explanation": "This is a business-rule error: retrying won't change the outcome. Set isError, categorize it, mark it as not retryable, and explain it so the agent can respond correctly.",
+   "order": 82,
+   "choices": [
+    {
+     "text": "isError: true, errorCategory \"business\", isRetryable: false, plus a readable reason",
+     "is_correct": true
+    },
+    {
+     "text": "isError: true, errorCategory \"transient\", isRetryable: true",
+     "is_correct": false
+    },
+    {
+     "text": "A success response with an empty body",
+     "is_correct": false
+    },
+    {
+     "text": "A generic \"Operation failed\" message, which keeps internal policy details out of the response",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 2,
+   "scenario": 1,
+   "prompt": "Which fields make an MCP tool error actionable for the agent? (Select TWO.)",
+   "explanation": "Structured errors set isError and include an errorCategory, isRetryable, and a readable description. That tells the agent whether to retry, fix its input, or escalate.",
+   "order": 83,
+   "choices": [
+    {
+     "text": "errorCategory, such as transient, validation, business or permission",
+     "is_correct": true
+    },
+    {
+     "text": "isRetryable, saying whether trying again could succeed",
+     "is_correct": true
+    },
+    {
+     "text": "The server's full stack trace",
+     "is_correct": false
+    },
+    {
+     "text": "The version of the HTTP library the server uses",
+     "is_correct": false
+    },
+    {
+     "text": "A random retry delay for the model to wait",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 2,
+   "scenario": 3,
+   "prompt": "The synthesis subagent has a generic fetch_url tool and sometimes pulls in unvetted web pages. What is the better tool design?",
+   "explanation": "Swap generic tools for constrained ones. A load_document tool scoped to the documents synthesis is meant to use keeps the subagent inside its role.",
+   "order": 84,
+   "choices": [
+    {
+     "text": "Replace fetch_url with a constrained load_document tool",
+     "is_correct": true
+    },
+    {
+     "text": "Keep fetch_url, and add a line to its description asking the subagent to be careful about sources",
+     "is_correct": false
+    },
+    {
+     "text": "Give the synthesis subagent all of the web search tools as well, so it can vet sources itself",
+     "is_correct": false
+    },
+    {
+     "text": "Let the synthesis subagent call the web search subagent directly whenever it needs a page",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 2,
+   "scenario": 3,
+   "prompt": "The synthesis subagent often needs to check one fact, and each time the request has to go through the coordinator to the web search subagent. What is the recommended change?",
+   "explanation": "Scope tools to each role, plus a few cross-role tools for frequent needs. A narrow verify_fact tool covers the common case without giving synthesis the full search toolset.",
+   "order": 85,
+   "choices": [
+    {
+     "text": "Give synthesis a scoped verify_fact tool, and leave broad searching to the search subagent",
+     "is_correct": true
+    },
+    {
+     "text": "Give the synthesis subagent every web search tool, so it never has to wait on the coordinator",
+     "is_correct": false
+    },
+    {
+     "text": "Let the synthesis subagent message the search subagent directly for each fact it checks",
+     "is_correct": false
+    },
+    {
+     "text": "Skip fact verification during synthesis and rely on the search step having been accurate",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 2,
+   "scenario": 4,
+   "prompt": "A developer wants to try an experimental MCP server just for themselves, without affecting the team. Where should it be configured?",
+   "explanation": "Project .mcp.json is for shared team tools. Personal or experimental servers go in the user-level ~/.claude.json.",
+   "order": 86,
+   "choices": [
+    {
+     "text": "In their user-level ~/.claude.json",
+     "is_correct": true
+    },
+    {
+     "text": "In the project's .mcp.json, committed to the repo so it's easy to remove later",
+     "is_correct": false
+    },
+    {
+     "text": "In the project's CLAUDE.md",
+     "is_correct": false
+    },
+    {
+     "text": "In .claude/commands/, as a slash command that starts the server",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 2,
+   "scenario": 4,
+   "prompt": "You connect both a GitHub MCP server and a Jira MCP server. How does the agent get their tools?",
+   "explanation": "Tools from all connected MCP servers are available at the same time, which is why clear, distinct tool descriptions matter.",
+   "order": 87,
+   "choices": [
+    {
+     "text": "Tools from both servers are available at the same time",
+     "is_correct": true
+    },
+    {
+     "text": "Only the first server listed in the config is active",
+     "is_correct": false
+    },
+    {
+     "text": "You choose one server per session",
+     "is_correct": false
+    },
+    {
+     "text": "Their tools replace the built-in tools while either server is connected",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 2,
+   "scenario": 4,
+   "prompt": "You need to understand how a function exported from payments/api.ts is used across a large codebase you've never seen. Which approach fits?",
+   "explanation": "Build understanding step by step: Grep for entry points, Read to follow imports, then trace exported names across modules.",
+   "order": 88,
+   "choices": [
+    {
+     "text": "Grep for entry points, Read to follow imports, then trace the exported names",
+     "is_correct": true
+    },
+    {
+     "text": "Read every file in the repository in alphabetical order",
+     "is_correct": false
+    },
+    {
+     "text": "Glob for every *.ts file, then Write a short summary of each one before looking for callers",
+     "is_correct": false
+    },
+    {
+     "text": "Use Edit to add logging to every file that might call it, then run the app and read the logs",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 2,
+   "scenario": 1,
+   "prompt": "The support agent sometimes needs a tool and sometimes should just answer in text, such as when explaining the return policy. Which tool_choice setting fits?",
+   "explanation": "\"auto\" lets the model decide whether to call a tool. \"any\" forces some tool call, and a named tool forces that specific tool.",
+   "order": 89,
+   "choices": [
+    {
+     "text": "\"auto\"",
+     "is_correct": true
+    },
+    {
+     "text": "\"any\"",
+     "is_correct": false
+    },
+    {
+     "text": "{\"type\": \"tool\", \"name\": \"lookup_order\"}",
+     "is_correct": false
+    },
+    {
+     "text": "Remove all tools from the request",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 3,
+   "scenario": 2,
+   "prompt": "The project's root CLAUDE.md has grown to 900 lines covering testing, API style and deployment. What is the most maintainable structure?",
+   "explanation": "Keep CLAUDE.md modular: split topics into files such as .claude/rules/testing.md, or pull them in with @import.",
+   "order": 90,
+   "choices": [
+    {
+     "text": "Split topics into files under .claude/rules/, or pull them in with @import",
+     "is_correct": true
+    },
+    {
+     "text": "Keep one file, but add a table of contents and clear headings so Claude can find each topic",
+     "is_correct": false
+    },
+    {
+     "text": "Move everything to ~/.claude/CLAUDE.md, where file length matters less than in the project",
+     "is_correct": false
+    },
+    {
+     "text": "Move it into a commands array in .claude/config.json, so it only loads when needed",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 3,
+   "scenario": 2,
+   "prompt": "Claude follows the team's API conventions for you but not for a teammate. You wrote the conventions in ~/.claude/CLAUDE.md. Why?",
+   "explanation": "The user-level ~/.claude/CLAUDE.md isn't shared. Team conventions belong in the project's CLAUDE.md so everyone gets them from the repo.",
+   "order": 91,
+   "choices": [
+    {
+     "text": "The user-level file isn't shared. Move the conventions to the project's CLAUDE.md",
+     "is_correct": true
+    },
+    {
+     "text": "Your teammate needs to run /compact first",
+     "is_correct": false
+    },
+    {
+     "text": "CLAUDE.md is only loaded in plan mode",
+     "is_correct": false
+    },
+    {
+     "text": "Conventions must be defined in .mcp.json to be shared",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 3,
+   "scenario": 2,
+   "prompt": "A teammate proposes adding a \"commands\" array to .claude/config.json to define a shared /release command. What should you tell them?",
+   "explanation": "There's no config.json \"commands\" array, and command definitions don't go in CLAUDE.md. Shared commands are files in the repo's .claude/commands/.",
+   "order": 92,
+   "choices": [
+    {
+     "text": "That doesn't exist. Add .claude/commands/release.md to the repo",
+     "is_correct": true
+    },
+    {
+     "text": "Good idea, as long as config.json is committed",
+     "is_correct": false
+    },
+    {
+     "text": "Define the command in the project's CLAUDE.md instead",
+     "is_correct": false
+    },
+    {
+     "text": "Put it in ~/.claude.json, which everyone who clones the repository shares",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 3,
+   "scenario": 2,
+   "prompt": "You have a long database-migration checklist that's only needed a few times a month. You don't want it in context in every session. Where should it live?",
+   "explanation": "Skills load on demand, while CLAUDE.md is always loaded. A rarely needed procedure fits a skill.",
+   "order": 93,
+   "choices": [
+    {
+     "text": "In a skill under .claude/skills/, which loads only when needed",
+     "is_correct": true
+    },
+    {
+     "text": "In the root CLAUDE.md so it's always available",
+     "is_correct": false
+    },
+    {
+     "text": "In ~/.claude/CLAUDE.md, which is only read when you ask about databases",
+     "is_correct": false
+    },
+    {
+     "text": "In the project's .mcp.json, next to the database server configuration",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 3,
+   "scenario": 2,
+   "prompt": "Your /scaffold-service skill needs a service name every time, and people keep forgetting to give one. Which SKILL.md frontmatter key helps?",
+   "explanation": "argument-hint prompts for parameters. context: fork isolates the skill's work, and allowed-tools restricts its tools.",
+   "order": 94,
+   "choices": [
+    {
+     "text": "argument-hint",
+     "is_correct": true
+    },
+    {
+     "text": "context: fork",
+     "is_correct": false
+    },
+    {
+     "text": "allowed-tools",
+     "is_correct": false
+    },
+    {
+     "text": "paths",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 3,
+   "scenario": 2,
+   "prompt": "What does context: fork do in a skill's SKILL.md frontmatter?",
+   "explanation": "context: fork runs the skill as an isolated sub-agent, so its verbose work doesn't fill the main conversation.",
+   "order": 95,
+   "choices": [
+    {
+     "text": "It runs the skill as an isolated sub-agent",
+     "is_correct": true
+    },
+    {
+     "text": "It creates a new git branch before the skill runs, so its changes can be reviewed",
+     "is_correct": false
+    },
+    {
+     "text": "It calls fork_session so the skill can be resumed later from the same point",
+     "is_correct": false
+    },
+    {
+     "text": "It copies the skill into every teammate's personal settings when they pull",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 3,
+   "scenario": 2,
+   "prompt": "Before planning a large refactor, Claude has to search hundreds of files, and the discovery output is filling up the main context. What helps most?",
+   "explanation": "Use the Explore subagent to keep verbose discovery out of the main context, then plan and execute.",
+   "order": 96,
+   "choices": [
+    {
+     "text": "Use the Explore subagent, so the verbose discovery stays out of the main context",
+     "is_correct": true
+    },
+    {
+     "text": "Switch to direct execution to skip the discovery",
+     "is_correct": false
+    },
+    {
+     "text": "Paste the full file list into CLAUDE.md",
+     "is_correct": false
+    },
+    {
+     "text": "Turn off plan mode for the rest of the session",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 3,
+   "scenario": 2,
+   "prompt": "You ask Claude to add HIPAA-compliant audit logging, a domain you don't know well. What is a good first step?",
+   "explanation": "The interview pattern: in unfamiliar domains, have Claude ask you questions to surface considerations before it implements anything.",
+   "order": 97,
+   "choices": [
+    {
+     "text": "Have Claude interview you to surface the requirements before implementing",
+     "is_correct": true
+    },
+    {
+     "text": "Have Claude implement it right away, then fix problems as they come up",
+     "is_correct": false
+    },
+    {
+     "text": "Give Claude a one-line request so it isn't constrained",
+     "is_correct": false
+    },
+    {
+     "text": "Use direct execution, since audit logging usually only touches a single logging module",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 3,
+   "scenario": 2,
+   "prompt": "You have three bugs: a cache-invalidation bug, the stale read it causes, and an unrelated typo in the docs. How should you send them to Claude?",
+   "explanation": "Send interacting issues together in one message so they're fixed together. Fix independent issues one at a time.",
+   "order": 98,
+   "choices": [
+    {
+     "text": "Send the two related bugs together, and fix the docs typo separately",
+     "is_correct": true
+    },
+    {
+     "text": "Send all three in one message",
+     "is_correct": false
+    },
+    {
+     "text": "Send each bug in its own message, including the two related ones, to keep changes small",
+     "is_correct": false
+    },
+    {
+     "text": "Fix the docs typo first, then send the two remaining bugs in separate follow-up messages",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 3,
+   "scenario": 2,
+   "prompt": "Claude's implementation of a pricing function keeps missing edge cases. Which iterative approach works best?",
+   "explanation": "Write tests first, then iterate on the failures. The tests make each edge case concrete and checkable.",
+   "order": 99,
+   "choices": [
+    {
+     "text": "Write tests for the edge cases first, then iterate on the failures",
+     "is_correct": true
+    },
+    {
+     "text": "Ask Claude to be more careful about edge cases and to double-check its work before finishing",
+     "is_correct": false
+    },
+    {
+     "text": "Use plan mode for the change, so Claude designs the pricing function before writing it",
+     "is_correct": false
+    },
+    {
+     "text": "Write a longer prose spec of the pricing rules that describes every edge case in detail",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 3,
+   "scenario": 5,
+   "prompt": "CI test generation keeps writing tests that duplicate existing ones and ignore your shared fixtures. What fixes this?",
+   "explanation": "Give Claude the existing tests so it doesn't duplicate them, and document testing standards and fixtures in CLAUDE.md.",
+   "order": 100,
+   "choices": [
+    {
+     "text": "Give it the existing tests, and document standards and fixtures in CLAUDE.md",
+     "is_correct": true
+    },
+    {
+     "text": "Run test generation through the Message Batches API",
+     "is_correct": false
+    },
+    {
+     "text": "Raise the agent's iteration cap",
+     "is_correct": false
+    },
+    {
+     "text": "Add --output-format json to the command",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 3,
+   "scenario": 5,
+   "prompt": "Which parts of a Claude Code CI step let a script turn the review into PR comments? (Select TWO.)",
+   "explanation": "-p (--print) runs non-interactively, so the job doesn't hang. --output-format json with --json-schema gives machine-parseable findings.",
+   "order": 101,
+   "choices": [
+    {
+     "text": "-p (--print), so the run is non-interactive",
+     "is_correct": true
+    },
+    {
+     "text": "--output-format json with --json-schema describing the findings",
+     "is_correct": true
+    },
+    {
+     "text": "--resume with the previous CI session",
+     "is_correct": false
+    },
+    {
+     "text": "Plan mode, so the findings are reviewed before posting",
+     "is_correct": false
+    },
+    {
+     "text": "An interactive session where a person approves each comment",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 4,
+   "scenario": 5,
+   "prompt": "Developers keep disagreeing with the review bot's \"high\" vs \"medium\" severity labels. What improves consistency most?",
+   "explanation": "Define each severity level with concrete code examples. Vague labels get applied inconsistently.",
+   "order": 102,
+   "choices": [
+    {
+     "text": "Define each severity level with concrete code examples",
+     "is_correct": true
+    },
+    {
+     "text": "Tell the model to think harder about severity",
+     "is_correct": false
+    },
+    {
+     "text": "Drop severity labels from the output",
+     "is_correct": false
+    },
+    {
+     "text": "Let the model choose its own severity scale for each review, based on the codebase",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 4,
+   "scenario": 5,
+   "prompt": "The review bot flags code comments as \"outdated\" even when they're accurate. Which instruction works best?",
+   "explanation": "Specific categorical criteria beat vague ones. \"Contradicts the code\" is checkable, while \"might be outdated\" is not.",
+   "order": 103,
+   "choices": [
+    {
+     "text": "Flag a comment only when it contradicts the code it describes",
+     "is_correct": true
+    },
+    {
+     "text": "Flag comments that might be outdated",
+     "is_correct": false
+    },
+    {
+     "text": "Be conservative, and only flag comments when you are fairly sure they're outdated",
+     "is_correct": false
+    },
+    {
+     "text": "Flag every comment that hasn't been edited in more than a year, based on git history",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 4,
+   "scenario": 5,
+   "prompt": "The review bot keeps flagging parameterized SQL queries as injection risks. What is the most effective fix?",
+   "explanation": "Few-shot examples that contrast the acceptable pattern with a real issue, with the reasoning shown, cut false positives without hiding real problems.",
+   "order": 104,
+   "choices": [
+    {
+     "text": "Few-shot examples contrasting safe parameterized queries with a real injection",
+     "is_correct": true
+    },
+    {
+     "text": "Tell the bot to skip anything related to SQL, since the database layer is reviewed separately",
+     "is_correct": false
+    },
+    {
+     "text": "Remove the security category from the review until the false positives stop appearing",
+     "is_correct": false
+    },
+    {
+     "text": "Ask the bot to report its confidence, and hide every finding it rates under 90%",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 4,
+   "scenario": 5,
+   "prompt": "Without a schema, the review bot's findings come back in different shapes each run, so they're hard to post as comments. Which prompting change helps?",
+   "explanation": "Few-shot examples should show the output format you want, such as location, issue, severity and fix.",
+   "order": 105,
+   "choices": [
+    {
+     "text": "Show the exact output format in your examples: location, issue, severity, fix",
+     "is_correct": true
+    },
+    {
+     "text": "Ask the bot to be consistent",
+     "is_correct": false
+    },
+    {
+     "text": "Raise the maximum output length",
+     "is_correct": false
+    },
+    {
+     "text": "Review fewer files per run",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 4,
+   "scenario": 6,
+   "prompt": "Extraction returns empty results for invoices laid out as tables with unusual headers, and works on standard layouts. What helps most?",
+   "explanation": "Few-shot examples that cover varied document structures reduce empty or hallucinated extractions.",
+   "order": 106,
+   "choices": [
+    {
+     "text": "Add few-shot examples that cover varied layouts, including tables",
+     "is_correct": true
+    },
+    {
+     "text": "Make every field required in the schema",
+     "is_correct": false
+    },
+    {
+     "text": "Switch tool_choice to \"auto\"",
+     "is_correct": false
+    },
+    {
+     "text": "Send those invoices through the Batch API, which handles unusual layouts separately",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 4,
+   "scenario": 6,
+   "prompt": "Extracted dates come back as \"03/04/24,\" \"March 4, 2024\" and \"2024-03-04,\" which breaks downstream systems. What should you add?",
+   "explanation": "Pair strict schemas with format normalization rules, such as always returning ISO 8601 dates.",
+   "order": 107,
+   "choices": [
+    {
+     "text": "Format normalization rules, such as always using ISO 8601 dates",
+     "is_correct": true
+    },
+    {
+     "text": "Make the date field nullable",
+     "is_correct": false
+    },
+    {
+     "text": "Remove the date field from the schema and parse dates downstream from the raw text",
+     "is_correct": false
+    },
+    {
+     "text": "Retry every extraction twice and always keep the second result for the date field",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 4,
+   "scenario": 6,
+   "prompt": "A contract states two different termination dates in different clauses. What should the extraction do?",
+   "explanation": "Self-checking fields such as conflict_detected surface contradictions so they can be reviewed, instead of silently picking one value.",
+   "order": 108,
+   "choices": [
+    {
+     "text": "Set a conflict_detected flag so the contract is routed for review",
+     "is_correct": true
+    },
+    {
+     "text": "Return the later of the two dates, since contracts usually extend rather than shorten",
+     "is_correct": false
+    },
+    {
+     "text": "Return the first date in the document, since earlier clauses take priority",
+     "is_correct": false
+    },
+    {
+     "text": "Leave the termination date empty and move on without flagging anything",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 4,
+   "scenario": 6,
+   "prompt": "Which statements about tool use with a JSON schema for extraction are true? (Select TWO.)",
+   "explanation": "A schema guarantees syntax, not semantics. You still need semantic checks (such as totals), and nullable fields to discourage invented values.",
+   "order": 109,
+   "choices": [
+    {
+     "text": "It guarantees the output matches the schema's structure",
+     "is_correct": true
+    },
+    {
+     "text": "It doesn't guarantee the values are correct",
+     "is_correct": true
+    },
+    {
+     "text": "It guarantees that line items add up to the total",
+     "is_correct": false
+    },
+    {
+     "text": "It prevents invented values for fields missing from the source",
+     "is_correct": false
+    },
+    {
+     "text": "It removes the need for a validation step",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 4,
+   "scenario": 6,
+   "prompt": "You're about to submit 100,000 documents to the Message Batches API with a new extraction prompt. What should you do first?",
+   "explanation": "Tune the prompt on a sample before a large run, so a prompt problem doesn't cost you a whole batch.",
+   "order": 110,
+   "choices": [
+    {
+     "text": "Tune the prompt on a representative sample first",
+     "is_correct": true
+    },
+    {
+     "text": "Submit everything now, and fix any problems in the results once the batch finishes",
+     "is_correct": false
+    },
+    {
+     "text": "Use synchronous requests for the first half",
+     "is_correct": false
+    },
+    {
+     "text": "Give each document its own one-item batch",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 4,
+   "scenario": 5,
+   "prompt": "To cut costs, the team wants to move the blocking pre-merge review check to the Message Batches API. What should you say?",
+   "explanation": "Batch is 50% cheaper but has no latency SLA (up to 24 hours). It suits latency-tolerant jobs, not blocking checks.",
+   "order": 111,
+   "choices": [
+    {
+     "text": "Don't: batches have no latency SLA and can take up to 24 hours",
+     "is_correct": true
+    },
+    {
+     "text": "Good idea: it's 50% cheaper and results are usually quick",
+     "is_correct": false
+    },
+    {
+     "text": "Fine, as long as every request has a custom_id",
+     "is_correct": false
+    },
+    {
+     "text": "That's fine, as long as each batch stays under 1,000 requests so it finishes faster",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 4,
+   "scenario": 6,
+   "prompt": "Your extraction needs the model to call a lookup tool, read the result, then continue extracting. Can this run through the Message Batches API as is?",
+   "explanation": "The Batches API doesn't support multi-turn tool calling within a request. Restructure the job, or run it synchronously.",
+   "order": 112,
+   "choices": [
+    {
+     "text": "No: batches don't support multi-turn tool calling, so restructure or run it synchronously",
+     "is_correct": true
+    },
+    {
+     "text": "Yes: the Batches API runs tool calls automatically and feeds the results back to the model",
+     "is_correct": false
+    },
+    {
+     "text": "Yes, as long as each request has a custom_id so the tool results can be matched up",
+     "is_correct": false
+    },
+    {
+     "text": "Yes, as long as the whole job is guaranteed to finish within the 24-hour window",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 4,
+   "scenario": 6,
+   "prompt": "An extraction fails validation because amount contains \"USD 1,200\" instead of a number. Will a retry with the error help?",
+   "explanation": "Retries fix format and structure errors. Send the original document, the failed extraction and the specific validation error.",
+   "order": 113,
+   "choices": [
+    {
+     "text": "Yes: it's a format error, so retry with the document, the failed extraction and the error",
+     "is_correct": true
+    },
+    {
+     "text": "No: retries never improve extraction results, so send the document straight to human review",
+     "is_correct": false
+    },
+    {
+     "text": "Yes, but resend only the validation error message, to keep the retry request small and cheap",
+     "is_correct": false
+    },
+    {
+     "text": "No: mark the document as unreadable and move on, since the source format is the problem",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 5,
+   "scenario": 1,
+   "prompt": "In one chat, a customer discusses two orders. Later, the agent applies order A's refund amount to order B. What prevents this?",
+   "explanation": "In multi-issue sessions, keep each issue's data separate, for example in per-issue case-facts blocks.",
+   "order": 114,
+   "choices": [
+    {
+     "text": "Keep each order's facts in its own clearly separated block",
+     "is_correct": true
+    },
+    {
+     "text": "Summarize the conversation more aggressively",
+     "is_correct": false
+    },
+    {
+     "text": "Merge both orders into a single case",
+     "is_correct": false
+    },
+    {
+     "text": "Escalate every chat that mentions more than one order",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 5,
+   "scenario": 1,
+   "prompt": "get_customer returns 45 fields, the agent needs 5 of them, and long chats run out of context. What should you do?",
+   "explanation": "Trim verbose tool output to the fields that matter before it enters the context.",
+   "order": 115,
+   "choices": [
+    {
+     "text": "Trim the tool output to the fields that matter before it enters the context",
+     "is_correct": true
+    },
+    {
+     "text": "Summarize the conversation history more often, so there's more room for the full output",
+     "is_correct": false
+    },
+    {
+     "text": "Tell the model in the system prompt to ignore the fields it doesn't need",
+     "is_correct": false
+    },
+    {
+     "text": "Split get_customer into 45 tools that each return a single field",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 5,
+   "scenario": 1,
+   "prompt": "A product manager proposes escalating any chat where the customer's sentiment score drops below -0.5. What is the best response?",
+   "explanation": "Sentiment is an unreliable signal of complexity. Use explicit escalation criteria with examples, such as an explicit request for a human, a policy gap, or no possible progress.",
+   "order": 116,
+   "choices": [
+    {
+     "text": "Push back: sentiment is unreliable. Use explicit escalation criteria with examples",
+     "is_correct": true
+    },
+    {
+     "text": "Adopt it: frustrated customers always need a human",
+     "is_correct": false
+    },
+    {
+     "text": "Adopt it with a stricter threshold of -0.8, so fewer chats are escalated by mistake",
+     "is_correct": false
+    },
+    {
+     "text": "Use the model's self-reported confidence instead, since it reflects how hard the case is",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 5,
+   "scenario": 1,
+   "prompt": "After several attempts, the agent can't find the customer's order with any identifier they provide. What should it do?",
+   "explanation": "When no meaningful progress is possible, escalate. Guessing could act on the wrong order.",
+   "order": 117,
+   "choices": [
+    {
+     "text": "Escalate to a human, since no meaningful progress is possible",
+     "is_correct": true
+    },
+    {
+     "text": "Keep trying new searches with variations of each identifier until the order turns up",
+     "is_correct": false
+    },
+    {
+     "text": "Pick the closest-matching order, confirm it with the customer, and continue from there",
+     "is_correct": false
+    },
+    {
+     "text": "Apologize, suggest the customer try again later, and close the chat politely",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 5,
+   "scenario": 3,
+   "prompt": "Two of the seven sources were unreachable during research. How should the final report handle this?",
+   "explanation": "Synthesis output should note coverage gaps, so readers know what the report couldn't check.",
+   "order": 118,
+   "choices": [
+    {
+     "text": "State the coverage gaps: which sources or subtopics couldn't be checked",
+     "is_correct": true
+    },
+    {
+     "text": "Leave it out, since the other five sources were enough",
+     "is_correct": false
+    },
+    {
+     "text": "Fail the whole report",
+     "is_correct": false
+    },
+    {
+     "text": "Fill the gaps from the model's general knowledge",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 5,
+   "scenario": 3,
+   "prompt": "A 2021 survey reports 40% adoption of a technology, and a 2024 survey reports 65%. How should the synthesis present this?",
+   "explanation": "Require publication or collection dates: a difference over time isn't a contradiction. Report both, with attribution.",
+   "order": 119,
+   "choices": [
+    {
+     "text": "Report both with their sources and dates, as a change over time",
+     "is_correct": true
+    },
+    {
+     "text": "Report only the newer figure",
+     "is_correct": false
+    },
+    {
+     "text": "Average them to 52.5%",
+     "is_correct": false
+    },
+    {
+     "text": "Treat the figures as contradictory and leave both out of the report",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 5,
+   "scenario": 3,
+   "prompt": "The final report mixes financial figures, news and technical findings in dense paragraphs that readers find hard to use. What helps?",
+   "explanation": "Format by content type (tables for financials, prose for news, lists for technical findings), and separate established findings from contested ones.",
+   "order": 120,
+   "choices": [
+    {
+     "text": "Format by content type: tables for financials, prose for news, lists for findings",
+     "is_correct": true
+    },
+    {
+     "text": "Put all of the content into one large table, so readers can scan everything in one place",
+     "is_correct": false
+    },
+    {
+     "text": "Cut the report down to a single summary paragraph that covers only the main conclusions",
+     "is_correct": false
+    },
+    {
+     "text": "Remove the financial figures, since they make the paragraphs too dense to read",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 5,
+   "scenario": 6,
+   "prompt": "The extraction model outputs field-level confidence. How should you choose the threshold for auto-accepting a field?",
+   "explanation": "Calibrate thresholds against a labeled validation set. Uncalibrated self-reported confidence isn't reliable on its own.",
+   "order": 121,
+   "choices": [
+    {
+     "text": "Calibrate it against a labeled validation set",
+     "is_correct": true
+    },
+    {
+     "text": "Start at 0.9, since a threshold that high is unlikely to let errors through",
+     "is_correct": false
+    },
+    {
+     "text": "Accept the model's confidence scores as they are, since it knows its own uncertainty",
+     "is_correct": false
+    },
+    {
+     "text": "Use one threshold for every field, without checking how each field performs",
+     "is_correct": false
+    }
+   ]
+  },
+  {
+   "domain": 5,
+   "scenario": 6,
+   "prompt": "Reviewers can only check about 5% of extractions. Where should their time go? (Select TWO.)",
+   "explanation": "Send low-confidence and contradictory items to humans, and use a stratified random sample of high-confidence items to measure errors and catch new patterns.",
+   "order": 122,
+   "choices": [
+    {
+     "text": "Low-confidence or contradictory extractions",
+     "is_correct": true
+    },
+    {
+     "text": "A stratified random sample of high-confidence extractions",
+     "is_correct": true
+    },
+    {
+     "text": "Only the documents with the most pages",
+     "is_correct": false
+    },
+    {
+     "text": "Only the items the model was most confident about",
+     "is_correct": false
+    },
+    {
+     "text": "Whatever arrived most recently",
      "is_correct": false
     }
    ]

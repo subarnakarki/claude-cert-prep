@@ -48,7 +48,7 @@ def test_practice_session_end_to_end(site, page: Page):
     expect(page.locator(".score")).to_contain_text("of 1 correct")
 
 
-def test_flashcards_flip(site, page: Page):
+def test_flashcards_flip(site, page: Page, expected):
     page.goto(site + "/flashcards/?domain=agentic")
     stage = page.locator(".deck .stage")
     expect(stage).to_be_visible()
@@ -58,4 +58,4 @@ def test_flashcards_flip(site, page: Page):
     expect(stage).to_have_attribute("aria-pressed", "true")
     expect(page.locator(".side")).to_have_text("back")
     page.get_by_role("button", name="next →").click()
-    expect(page.locator(".pos")).to_contain_text("2/12")
+    expect(page.locator(".pos")).to_contain_text(f"2/{expected.cards['agentic']}")

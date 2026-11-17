@@ -13,6 +13,7 @@
     <p>{{ s.summary|safe }}</p>
     <p class="look"><b>look for:</b> {{ s.focus|codeify }}</p>
     <div class="tags" aria-label="Domains">{% for d in s.domains.all %}<a href="{{ d.get_absolute_url }}">{{ d.slug }}</a>{% endfor %}</div>
+    {% if s.n_questions %}<p class="scen-cta"><a class="btn" href="{% url 'study:practice_setup' %}?scenario={{ s.number }}">ccarf practice --scenario {{ s.number }}</a> <span class="m d">{{ s.n_questions }} questions</span></p>{% endif %}
   </li>
   {% endfor %}
 </ol>

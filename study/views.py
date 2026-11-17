@@ -76,7 +76,9 @@ def rules(request):
 
 @require_GET
 def scenarios(request):
-    items = Scenario.objects.prefetch_related(Prefetch("domains", Domain.objects.all()))
+    items = Scenario.objects.prefetch_related(Prefetch("domains", Domain.objects.all())).annotate(
+        n_questions=Count("questions")
+    )
     return render(request, "study/scenarios.html", {"scenarios": items})
 
 
@@ -102,7 +104,11 @@ def plan(request):
 
 @require_GET
 def practice_setup(request):
-    initial = {"domain": request.GET.get("domain", ""), "mode": request.GET.get("mode", "all")}
+    initial = {
+        "domain": request.GET.get("domain", ""),
+        "scenario": request.GET.get("scenario", ""),
+        "mode": request.GET.get("mode", "all"),
+    }
     return _render_setup(request, PracticeSetupForm(initial=initial))
 
 
@@ -122,11 +128,17 @@ def practice_start(request):
     if not form.is_valid():
         return _render_setup(request, form, status=400)
     domain, mode = form.cleaned_data["domain"], form.cleaned_data["mode"]
-    pool = practice.select_pool(_session_key(request), domain, mode)
+    scenario = form.cleaned_data["scenario"]
+    pool = practice.select_pool(_session_key(request), domain, mode, scenario)
     if not pool:
         form.add_error(None, _empty_pool_message(mode))
         return _render_setup(request, form)
-    run = practice.build_run(pool, domain=domain.slug if domain else "", mode=mode)
+    run = practice.build_run(
+        pool,
+        domain=domain.slug if domain else "",
+        mode=mode,
+        scenario=scenario.number if scenario else None,
+    )
     practice.start_run(request.session, run)
     return redirect("study:practice_question")
 
@@ -136,7 +148,7 @@ def _empty_pool_message(mode: str) -> str:
         return "Nothing to retry: you haven't missed any questions here yet."
     if mode == "unanswered":
         return "You've answered every question here. Try all questions or only misses."
-    return "There are no questions for that domain yet."
+    return "No questions match that domain and scenario."
 
 
 @require_http_methods(["GET", "POST"])
@@ -148,7 +160,7 @@ def practice_question(request):
         return redirect("study:practice_results")
 
     question = (
-        Question.objects.select_related("domain")
+        Question.objects.select_related("domain", "scenario")
         .prefetch_related("choices")
         .filter(pk=run.current_id)
         .first()
@@ -205,6 +217,7 @@ def _question_context(run, question, error):
         "error": error,
         "is_last": run.pos == run.total - 1,
         "domain": Domain.objects.filter(slug=run.domain).first() if run.domain else None,
+        "scenario": Scenario.objects.filter(number=run.scenario).first() if run.scenario else None,
     }
 
 
@@ -268,7 +281,9 @@ def practice_retry(request):
     run = practice.PracticeRun.load(request.session)
     if run is None or not run.missed_ids:
         return redirect("study:practice_setup")
-    retry = practice.build_run(run.missed_ids, domain=run.domain, mode="missed")
+    retry = practice.build_run(
+        run.missed_ids, domain=run.domain, mode="missed", scenario=run.scenario
+    )
     practice.start_run(request.session, retry)
     return redirect("study:practice_question")
 

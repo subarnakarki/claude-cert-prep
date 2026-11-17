@@ -77,14 +77,14 @@ def test_no_server_only_features_remain(site):
         assert "?domain=" not in re.sub(r'href="[^"]*practice/\?domain=[^"]*"', "", html), page
 
 
-def test_flashcard_filters_become_pages(site):
+def test_flashcard_filters_become_pages(site, expected):
     out, _ = site
     html = (out / "flashcards" / "agentic" / "index.html").read_text(encoding="utf-8")
-    assert html.count('<li class="card">') == 12
+    assert html.count('<li class="card">') == expected.cards["agentic"]
     assert f'href="{BASE}flashcards/agentic/" aria-current="true"' in html
 
 
-def test_content_json_is_codeified_and_complete(site):
+def test_content_json_is_codeified_and_complete(site, expected):
     out, _ = site
     data = json.loads((out / "content.json").read_text(encoding="utf-8"))
     assert [d["slug"] for d in data["domains"]] == [
@@ -95,7 +95,9 @@ def test_content_json_is_codeified_and_complete(site):
         "context",
     ]
     assert sum(d["weight"] for d in data["domains"]) == 100
-    assert len(data["questions"]) == 63
+    assert len(data["questions"]) == expected.questions
+    assert [s["number"] for s in data["scenarios"]] == [1, 2, 3, 4, 5, 6]
+    assert any(q["scenario"] == 1 for q in data["questions"])
     for q in data["questions"]:
         assert any(c["correct"] for c in q["choices"])
         assert "<script" not in q["prompt"]

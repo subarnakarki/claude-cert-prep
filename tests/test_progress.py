@@ -100,16 +100,18 @@ def test_latest_attempt_decides_mastery(make_attempt):
 @pytest.mark.django_db
 def test_readiness_counts_per_domain(make_attempt, domains):
     agentic = list(domains["agentic"].questions.all())
-    for q in agentic[:9]:
+    total = len(agentic)
+    mastered = -(-total * 3 // 4)  # 75%, rounded up
+    for q in agentic[:mastered]:
         make_attempt("s1", q, True)
-    make_attempt("s1", agentic[9], False)
+    make_attempt("s1", agentic[mastered], False)
     rows = {r.domain.slug: r for r in progress.readiness("s1")}
-    assert rows["agentic"].mastered == 9
-    assert rows["agentic"].total == 12
-    assert rows["agentic"].status == "ok"  # 75%
+    assert rows["agentic"].mastered == mastered
+    assert rows["agentic"].total == total
+    assert rows["agentic"].status == "ok"
     assert rows["tools_mcp"].mastered == 0
     assert progress.weakest(list(rows.values())).domain.slug == "claude_code"  # 0%, weight 20
-    assert progress.projected_score(list(rows.values())) == pytest.approx(27 * 9 / 12)
+    assert progress.projected_score(list(rows.values())) == pytest.approx(27 * mastered / total)
 
 
 @pytest.mark.django_db

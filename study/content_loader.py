@@ -86,15 +86,19 @@ def load(get_model: GetModel, data: dict | None = None) -> dict[str, int]:
         )
     Flashcard.objects.filter(order__gte=len(data["flashcards"])).delete()
 
+    scenarios = {s.number: s for s in Scenario.objects.all()}
+    # The 0002 data migration runs this with historical models from before
+    # Question.scenario existed, so only set the field when the model has it.
+    has_scenario = any(f.name == "scenario" for f in Question._meta.get_fields())
     for q in data["questions"]:
-        question, _ = Question.objects.update_or_create(
-            order=q["order"],
-            defaults={
-                "domain": domains[q["domain"]],
-                "prompt": q["prompt"],
-                "explanation": q["explanation"],
-            },
-        )
+        defaults = {
+            "domain": domains[q["domain"]],
+            "prompt": q["prompt"],
+            "explanation": q["explanation"],
+        }
+        if has_scenario:
+            defaults["scenario"] = scenarios.get(q.get("scenario"))
+        question, _ = Question.objects.update_or_create(order=q["order"], defaults=defaults)
         for j, c in enumerate(q["choices"]):
             Choice.objects.update_or_create(
                 question=question,
