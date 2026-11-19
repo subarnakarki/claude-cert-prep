@@ -101,6 +101,7 @@ def test_content_json_is_codeified_and_complete(site, expected):
     assert any(q["scenario"] == 1 for q in data["questions"])
     for q in data["questions"]:
         assert any(c["correct"] for c in q["choices"])
+        assert all(c["why"] for c in q["choices"])
         assert "<script" not in q["prompt"]
     assert any(
         "<code>process_refund</code>" in c["html"] for q in data["questions"] for c in q["choices"]

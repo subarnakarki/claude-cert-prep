@@ -58,15 +58,21 @@ def longest_is_correct_ratio(questions) -> float:
 
 
 def test_answer_length_is_not_a_giveaway(content):
-    """The correct choice shouldn't stand out as the longest one.
+    """The correct choice shouldn't stand out as the longest one."""
+    assert longest_is_correct_ratio(content["questions"]) <= 0.1
 
-    This is a ratchet: the original 63 questions often have the longest choice as the
-    answer, while questions from order 63 on are balanced. New content must not make it
-    worse; lower the bound as the older questions are rebalanced.
-    """
-    new = [q for q in content["questions"] if q["order"] >= 63]
-    assert longest_is_correct_ratio(new) < 0.3
-    assert longest_is_correct_ratio(content["questions"]) <= 0.52
+
+def test_questions_read_like_exam_items(content):
+    """Exam-style stems set up a situation, and every choice explains itself after answering."""
+    for q in content["questions"]:
+        assert len(q["prompt"].split()) >= 35, q["order"]
+        for c in q["choices"]:
+            assert c.get("why"), (q["order"], c["text"])
+
+
+def test_every_flashcard_has_a_note(content):
+    for card in content["flashcards"]:
+        assert 'class="fc-note"' in card["back_html"], card["front"]
 
 
 def test_question_orders_are_unique(content):

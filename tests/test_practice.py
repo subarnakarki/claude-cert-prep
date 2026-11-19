@@ -123,6 +123,7 @@ def test_single_correct(client):
 def test_single_wrong_shows_feedback(client):
     q = single_question()
     start_with(client, q)
+    assert 'class="why"' not in client.get("/practice/question/").content.decode()
     picked = wrong_ids(q)
     answer(client, picked)
     assert not Attempt.objects.get().is_correct
@@ -135,6 +136,8 @@ def test_single_wrong_shows_feedback(client):
     assert f"you chose [{letters[picked[0]]}]" in html
     assert f"answer [{letters[correct_ids(q)[0]]}]" in html
     assert q.explanation[:30] in html
+    # Every choice explains why it's right or worse once the answer is graded.
+    assert html.count('class="why"') == q.choices.count()
 
 
 def test_multi_select_exact_match(client):

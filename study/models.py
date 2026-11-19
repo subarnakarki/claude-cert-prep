@@ -124,6 +124,9 @@ class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="choices")
     text = models.TextField()
     is_correct = models.BooleanField(default=False)
+    why = models.TextField(
+        blank=True, help_text="Shown after answering: why this choice is right or worse"
+    )
     order = models.PositiveSmallIntegerField(default=0)
 
     class Meta:

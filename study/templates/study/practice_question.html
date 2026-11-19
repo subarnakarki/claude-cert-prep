@@ -17,7 +17,7 @@
     <label class="opt {{ o.state }}">
       <input type="{% if question.is_multi %}checkbox{% else %}radio{% endif %}" name="choice" value="{{ o.choice.id }}"{% if o.checked %} checked{% endif %}{% if answer %} disabled{% endif %}>
       <span class="k" aria-hidden="true">[{{ o.letter }}]</span>
-      <span>{{ o.choice.text|codeify }}{% if o.state == "right" %}<span class="sr-only"> (correct answer)</span>{% elif o.state == "wrong" %}<span class="sr-only"> (your pick, incorrect)</span>{% endif %}</span>
+      <span>{{ o.choice.text|codeify }}{% if o.state == "right" %}<span class="sr-only"> (correct answer)</span>{% elif o.state == "wrong" %}<span class="sr-only"> (your pick, incorrect)</span>{% endif %}{% if answer and o.choice.why %}<span class="why">{{ o.choice.why|codeify }}</span>{% endif %}</span>
     </label>
     {% endfor %}
   </fieldset>

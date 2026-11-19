@@ -90,6 +90,7 @@ def load(get_model: GetModel, data: dict | None = None) -> dict[str, int]:
     # The 0002 data migration runs this with historical models from before
     # Question.scenario existed, so only set the field when the model has it.
     has_scenario = any(f.name == "scenario" for f in Question._meta.get_fields())
+    has_why = any(f.name == "why" for f in Choice._meta.get_fields())
     for q in data["questions"]:
         defaults = {
             "domain": domains[q["domain"]],
@@ -100,11 +101,10 @@ def load(get_model: GetModel, data: dict | None = None) -> dict[str, int]:
             defaults["scenario"] = scenarios.get(q.get("scenario"))
         question, _ = Question.objects.update_or_create(order=q["order"], defaults=defaults)
         for j, c in enumerate(q["choices"]):
-            Choice.objects.update_or_create(
-                question=question,
-                order=j,
-                defaults={"text": c["text"], "is_correct": c["is_correct"]},
-            )
+            choice_defaults = {"text": c["text"], "is_correct": c["is_correct"]}
+            if has_why:
+                choice_defaults["why"] = c.get("why", "")
+            Choice.objects.update_or_create(question=question, order=j, defaults=choice_defaults)
         Choice.objects.filter(question=question, order__gte=len(q["choices"])).delete()
     # Removing a question also removes its attempts: there is nothing left to master.
     Question.objects.exclude(order__in=[q["order"] for q in data["questions"]]).delete()

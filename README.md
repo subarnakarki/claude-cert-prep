@@ -30,13 +30,14 @@ Screenshots of every page at 1400px and 390px are in [`docs/`](docs/). The appro
 - **Domains:** every task statement for each domain, with "trap" and "what wins" callouts.
 - **Decision rules:** 36 "if this symptom → pick that fix" rows.
 - **Scenarios:** the six exam scenarios, the domains each one covers, what to look for, and a `ccarf practice --scenario <n>` button to drill one.
-- **Flashcards:** one card at a time, with flip, prev/next, shuffle and arrow keys. Without JavaScript the page shows a readable list of every card.
+- **Flashcards:** each card's back has the answer plus a *Trap* / *Why* / *Exam tell* line that ties it to how questions are asked. One card at a time, with flip, prev/next, shuffle and arrow keys. Without JavaScript the page shows a readable list of every card.
 - **Practice:**
   - Filter by domain and/or scenario, and pick a mode: all questions, only the ones you missed, or only unanswered.
   - Questions framed in a scenario say so, e.g. `scenario: customer support resolution agent  domain: agentic`.
   - Questions and choices are shuffled once per run.
   - Multi-select questions ("Select TWO") are graded on exact match.
-  - After each answer you get feedback in the style of the design: `✗ incorrect  you chose [a]  answer [b]` plus the explanation.
+  - Questions are written like exam items: a scenario stem with real constraints, four options that each sound plausible, and a qualifier such as *best*, *first* or *most reliable*.
+  - After each answer you get feedback in the style of the design: `✗ incorrect  you chose [a]  answer [b]`, a line under **every** option saying why it is right or worse, and the key idea behind the question.
   - A ●●◉○○ progress line, results by domain, and a "retry missed" button.
 - **Study plan:** a 10-day plan plus the four hands-on exercises from the exam guide.
 - **Reset:** a confirm page, then a POST that clears this browser's progress.

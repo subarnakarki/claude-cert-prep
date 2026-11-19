@@ -75,7 +75,12 @@ def content_payload() -> dict:
             "prompt": str(codeify(q.prompt)),
             "explanation": str(codeify(q.explanation)),
             "choices": [
-                {"id": c.pk, "html": str(codeify(c.text)), "correct": c.is_correct}
+                {
+                    "id": c.pk,
+                    "html": str(codeify(c.text)),
+                    "why": str(codeify(c.why)),
+                    "correct": c.is_correct,
+                }
                 for c in q.choices.all()
             ],
         }

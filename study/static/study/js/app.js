@@ -338,7 +338,7 @@
           return (
             `<label class="opt ${outcome}"><input type="${multi ? "checkbox" : "radio"}" name="choice" ` +
             `value="${choice.id}"${checked ? " checked" : ""}${answer ? " disabled" : ""}>` +
-            `<span class="k" aria-hidden="true">[${LETTERS[i]}]</span><span>${choice.html}${note}</span></label>`
+            `<span class="k" aria-hidden="true">[${LETTERS[i]}]</span><span>${choice.html}${note}${answer && choice.why ? `<span class="why">${choice.why}</span>` : ""}</span></label>`
           );
         })
         .join("");
