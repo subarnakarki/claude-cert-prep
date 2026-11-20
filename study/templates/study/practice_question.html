@@ -55,6 +55,6 @@
   <dt>Correct</dt><dd>{{ run.correct_count }}</dd>
   <dt>Domains</dt><dd>{% if domain %}{{ domain.short_name }}{% else %}All{% endif %}</dd>
   {% if scenario %}<dt>Scenario</dt><dd>{{ scenario.title }}</dd>{% endif %}
-  <dt>Mode</dt><dd>{% if run.mode == "missed" %}Missed only{% elif run.mode == "unanswered" %}Unanswered only{% else %}All questions{% endif %}</dd>
+  <dt>Mode</dt><dd>{% if run.mode == "missed" %}Missed only{% elif run.mode == "unanswered" %}Unanswered only{% elif run.mode == "remaining" %}Not yet right{% else %}All questions{% endif %}</dd>
 </dl>
 {% endblock %}

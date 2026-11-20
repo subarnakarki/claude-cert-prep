@@ -15,6 +15,7 @@ SESSION_KEY = "practice"
 RUNS_KEY = "runs_started"
 
 MODES = {
+    "remaining": "Skip ones I've got right",
     "all": "All questions",
     "missed": "Only ones I missed",
     "unanswered": "Only unanswered",
@@ -31,7 +32,7 @@ class PracticeRun:
     question_ids: list[int]
     choice_order: dict[str, list[int]]  # JSON object keys are strings
     domain: str = ""  # slug, "" for all domains
-    mode: str = "all"
+    mode: str = "remaining"
     scenario: int | None = None  # scenario number, None for all scenarios
     pos: int = 0
     answers: dict[str, dict] = field(default_factory=dict)
@@ -125,6 +126,8 @@ def select_pool(
     if mode == "all":
         return ids
     results = latest_results(session_key)
+    if mode == "remaining":  # drop questions whose latest answer was correct
+        return [qid for qid in ids if results.get(qid) is not True]
     if mode == "missed":
         return [qid for qid in ids if results.get(qid) is False]
     return [qid for qid in ids if qid not in results]
@@ -134,7 +137,7 @@ def build_run(
     question_ids: list[int],
     *,
     domain: str = "",
-    mode: str = "all",
+    mode: str = "remaining",
     scenario: int | None = None,
     rng: random.Random | None = None,
 ) -> PracticeRun:

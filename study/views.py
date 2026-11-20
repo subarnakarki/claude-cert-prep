@@ -113,7 +113,7 @@ def practice_setup(request):
     initial = {
         "domain": request.GET.get("domain", ""),
         "scenario": request.GET.get("scenario", ""),
-        "mode": request.GET.get("mode", "all"),
+        "mode": request.GET.get("mode", "remaining"),
     }
     return _render_setup(request, PracticeSetupForm(initial=initial))
 
@@ -154,6 +154,8 @@ def _empty_pool_message(mode: str) -> str:
         return "Nothing to retry: you haven't missed any questions here yet."
     if mode == "unanswered":
         return "You've answered every question here. Try all questions or only misses."
+    if mode == "remaining":
+        return "You've got every question here right. Pick all questions to review them."
     return "No questions match that domain and scenario."
 
 
@@ -296,10 +298,15 @@ def practice_retry(request):
 
 @require_POST
 def practice_quick_start(request, slug):
-    """The overview's `ccarf practice --domain <slug>` button: all questions, one domain."""
+    """The overview's `ccarf practice --domain <slug>` button: one domain, skipping
+    questions already answered correctly (all of them once the domain is mastered)."""
     domain = get_object_or_404(Domain, slug=slug)
-    pool = practice.select_pool(_session_key(request), domain, "all")
-    practice.start_run(request.session, practice.build_run(pool, domain=slug))
+    mode = "remaining"
+    pool = practice.select_pool(_session_key(request), domain, mode)
+    if not pool:
+        mode = "all"
+        pool = practice.select_pool(_session_key(request), domain, mode)
+    practice.start_run(request.session, practice.build_run(pool, domain=slug, mode=mode))
     return redirect("study:practice_question")
 
 

@@ -118,3 +118,39 @@ def test_static_scenario_drill(static_site, page: Page):
     page.get_by_role("button", name="ccarf practice").click()
     expect(page.get_by_text("scenario: structured data extraction")).to_be_visible()
     expect(page.locator("#run-aside")).to_contain_text("Structured Data Extraction")
+
+
+def test_flashcards_reopen_where_you_left_off(static_site, page: Page):
+    page.goto(static_site + "flashcards/")
+    wait_ready(page)
+    pos = page.locator("#deck .pos")
+    expect(pos).to_contain_text("1/")
+    page.get_by_role("button", name="next →").click()
+    page.get_by_role("button", name="next →").click()
+    expect(pos).to_contain_text("3/")
+    page.reload()
+    expect(pos).to_contain_text("3/")
+
+
+def test_practice_skips_questions_already_answered_correctly(static_site, page: Page):
+    page.goto(static_site + "practice/")
+    wait_ready(page)
+    expect(page.locator("input[value=remaining]")).to_be_checked()
+    total = page.evaluate(
+        """async (base) => (await (await fetch(base + "content.json")).json()).questions.length""",
+        static_site,
+    )
+    # Mark one question mastered and one missed, then start a run with the default mode.
+    page.evaluate(
+        """async (base) => {
+          const data = await (await fetch(base + "content.json")).json();
+          const [a, b] = data.questions;
+          const latest = {[a.id]: true, [b.id]: false};
+          localStorage.setItem("ccarf-prep:v1", JSON.stringify({latest}));
+        }""",
+        static_site,
+    )
+    page.reload()
+    wait_ready(page)
+    page.get_by_role("button", name="ccarf practice").click()
+    expect(page.locator(".prog .count")).to_contain_text(f"/{total - 1}")

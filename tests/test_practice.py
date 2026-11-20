@@ -288,6 +288,53 @@ def test_unanswered_mode(client, make_attempt, domains, expected):
     assert qs[0].pk not in client.session["practice"]["question_ids"]
 
 
+def test_remaining_mode_skips_questions_answered_correctly(client, make_attempt, domains):
+    start_practice(client, "context")
+    key = session_key_of(client)
+    qs = list(domains["context"].questions.all())
+    make_attempt(key, qs[0], True)  # mastered → removed
+    make_attempt(key, qs[1], False)  # missed → stays
+    make_attempt(key, qs[2], False)
+    make_attempt(key, qs[2], True)  # latest is right → removed
+    start_practice(client, "context", "remaining")
+    ids = client.session["practice"]["question_ids"]
+    assert qs[0].pk not in ids
+    assert qs[2].pk not in ids
+    assert qs[1].pk in ids
+    assert len(ids) == len(qs) - 2
+
+
+def test_remaining_is_the_default_mode(client):
+    import re
+
+    html = client.get("/practice/").content.decode()
+    tag = re.search(r'<input[^>]*value="remaining"[^>]*>', html).group(0)
+    assert "checked" in tag
+
+
+def test_remaining_mode_empty_when_everything_mastered(client, make_attempt, domains):
+    start_practice(client, "context")
+    key = session_key_of(client)
+    for q in domains["context"].questions.all():
+        make_attempt(key, q, True)
+    response = start_practice(client, "context", "remaining")
+    assert "every question here right" in response.content.decode()
+
+
+def test_quick_start_skips_mastered_then_falls_back_to_all(client, make_attempt, domains):
+    start_practice(client, "context")
+    key = session_key_of(client)
+    qs = list(domains["context"].questions.all())
+    make_attempt(key, qs[0], True)
+    client.post("/practice/start/context/")
+    assert qs[0].pk not in client.session["practice"]["question_ids"]
+    for q in qs:
+        make_attempt(key, q, True)
+    client.post("/practice/start/context/")
+    assert len(client.session["practice"]["question_ids"]) == len(qs)
+    assert client.session["practice"]["mode"] == "all"
+
+
 def test_empty_pool_shows_message(client):
     response = start_practice(client, "agentic", "missed")
     assert response.status_code == 200

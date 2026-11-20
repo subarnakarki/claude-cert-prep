@@ -18,7 +18,7 @@
   const READY_LINE = 85;
   const BAR_WIDTH = 16;
   const LETTERS = "abcdefghij";
-  const MODES = { all: "All questions", missed: "Missed only", unanswered: "Unanswered only" };
+  const MODES = { remaining: "Not yet right", all: "All questions", missed: "Missed only", unanswered: "Unanswered only" };
 
   // -- storage ------------------------------------------------------------------------
 
@@ -113,6 +113,7 @@
     let questions = data.questions.filter(
       (q) => (!domain || q.domain === domain) && (!scenario || q.scenario === scenario),
     );
+    if (mode === "remaining") questions = questions.filter((q) => state.latest[q.id] !== true);
     if (mode === "missed") questions = questions.filter((q) => state.latest[q.id] === false);
     if (mode === "unanswered") questions = questions.filter((q) => !(q.id in state.latest));
     return questions.map((q) => q.id);
@@ -121,6 +122,7 @@
   function emptyPoolMessage(mode) {
     if (mode === "missed") return "Nothing to retry: you haven't missed any questions here yet.";
     if (mode === "unanswered") return "You've answered every question here. Try all questions or only misses.";
+    if (mode === "remaining") return "You've got every question here right. Pick all questions to review them.";
     return "No questions match that domain and scenario.";
   }
 
@@ -209,7 +211,10 @@
     document.querySelectorAll("button[data-start]").forEach((button) => {
       button.addEventListener("click", () => {
         const domain = button.dataset.start;
-        startRun(data, state, selectPool(data, state, domain, "all"), domain, "all");
+        let mode = "remaining";
+        let ids = selectPool(data, state, domain, mode);
+        if (!ids.length) ids = selectPool(data, state, domain, (mode = "all"));
+        startRun(data, state, ids, domain, mode);
       });
     });
   }
@@ -233,7 +238,7 @@
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       const domain = form.elements.domain.value;
-      const mode = form.elements.mode.value || "all";
+      const mode = form.elements.mode.value || "remaining";
       const scenario = Number(form.elements.scenario.value) || null;
       const ids = selectPool(data, state, domain, mode, scenario);
       const error = form.querySelector("[data-setup-error]");
@@ -293,7 +298,7 @@
         `<h2>This session</h2><dl><dt>Answered</dt><dd>${answered} of ${run.question_ids.length}</dd>` +
         `<dt>Correct</dt><dd>${correct}</dd><dt>Domains</dt><dd>${domain ? domain.short_name : "All"}</dd>` +
         (scenario ? `<dt>Scenario</dt><dd>${scenario.title}</dd>` : "") +
-        `<dt>Mode</dt><dd>${MODES[run.mode] || MODES.all}</dd></dl>`;
+        `<dt>Mode</dt><dd>${MODES[run.mode] || MODES.remaining}</dd></dl>`;
     }
 
     function roleLabel(question, n) {

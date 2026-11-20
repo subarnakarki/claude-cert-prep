@@ -8,7 +8,10 @@ class PracticeSetupForm(forms.Form):
     domain = forms.ChoiceField(required=False, label="Domain")
     scenario = forms.ChoiceField(required=False, label="Scenario")
     mode = forms.ChoiceField(
-        choices=list(MODES.items()), initial="all", widget=forms.RadioSelect, label="Questions"
+        choices=list(MODES.items()),
+        initial="remaining",
+        widget=forms.RadioSelect,
+        label="Questions",
     )
 
     def __init__(self, *args, **kwargs):

@@ -30,9 +30,9 @@ Screenshots of every page at 1400px and 390px are in [`docs/`](docs/). The appro
 - **Domains:** every task statement for each domain, with "trap" and "what wins" callouts.
 - **Decision rules:** 36 "if this symptom → pick that fix" rows.
 - **Scenarios:** the six exam scenarios, the domains each one covers, what to look for, and a `ccarf practice --scenario <n>` button to drill one.
-- **Flashcards:** each card's back has the answer plus a *Trap* / *Why* / *Exam tell* line that ties it to how questions are asked. One card at a time, with flip, prev/next, shuffle and arrow keys. Without JavaScript the page shows a readable list of every card.
+- **Flashcards:** each card's back has the answer plus a *Trap* / *Why* / *Exam tell* line that ties it to how questions are asked. One card at a time, with flip, prev/next, shuffle and arrow keys. The deck remembers your card (and shuffle order) per filter, so it reopens where you left off. Without JavaScript the page shows a readable list of every card.
 - **Practice:**
-  - Filter by domain and/or scenario, and pick a mode: all questions, only the ones you missed, or only unanswered.
+  - Filter by domain and/or scenario, and pick a mode. The default skips questions whose latest answer was right, so mastered questions drop out of practice; the other modes are all questions, only the ones you missed, or only unanswered. The overview's quick-start button uses the default too, and falls back to all questions once a domain is fully mastered.
   - Questions framed in a scenario say so, e.g. `scenario: customer support resolution agent  domain: agentic`.
   - Questions and choices are shuffled once per run.
   - Multi-select questions ("Select TWO") are graded on exact match.
